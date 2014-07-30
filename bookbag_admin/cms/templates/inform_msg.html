@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}发布通知{% endblock %}
+
+{% block content %}
+<form method='post' action='.'> {% csrf_token %}
+  <table cellspacing='20px'>
+    <tr>
+      <td valign='top' style='padding:0 10px'>
+        <ul>
+          {% for class in classes %}
+          <li>
+            <input type='hidden' name='class' value='{{ class.id }}' />
+            <label style='color: #00f'>{{ class.name }}</lable>
+          </li>
+          {% endfor %}
+          {% for user in users %}
+          <li style='list-style-type: circle'>
+            <input type='hidden' name='user' value='{{ user.id }}' />
+            {{ user.username }}
+          </li>
+          {% endfor %}
+        </ul>
+      </td>
+      <td valign='top' style='padding:0 40px'>
+        <div class='message'>
+        {{ form.message.errors }}
+        {{ form.message.label }}: 
+        {{ form.message }}
+        </div>
+      </td>
+    </tr>
+　 　<tr>
+      <td>
+        <input type='submit' name='cancel' value='取消' />
+      </td>
+      <td style='padding:0 40px'>
+        <input type='submit' name='inform' value='发布' />
+      </td>
+    </tr>
+  </table>
+  <input type='hidden' name='next_url' value='{{ next_url }}' />
+</form>
+{% endblock %}

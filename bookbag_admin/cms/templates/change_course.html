@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}课程编辑{% endblock %}
+
+{% block external %}
+<script type="text/javascript" src="{{ STATIC_URL }}jquery-1.9.1.min.js" ></script>
+<script type='text/javascript' src='{{ STATIC_URL }}file_field.js'></script>
+{% endblock %}
+{% block content %}
+<a href='/course/list/'>课程管理</a> > {% if course %}修改课程{% else %}添加课程{% endif %}
+<!--
+{% if course %}
+<a href='/inform_select/?next_url=/course/edit?course_id={{ course.id }}' style='padding:0 0 0 240px'>通知更新</a>
+{% endif %}
+-->
+<form method='post' action='.' enctype='multipart/form-data'> {% csrf_token %}
+<table cellspacing='10'>
+{% for field in form %}
+{% include "includes/field.html" %}
+{% endfor %}
+
+{% if course %}
+<tr>
+  <td></td>
+  <td>
+     <img class=cover src={{ course.get_image_url }} />
+  </td>
+</tr>
+{% endif %}
+
+<tr>
+  <td></td>
+    {% if course %}
+    <td align='left'>
+      <input type='submit' name='edit' value='修改' class='user_change' />
+      <input type='submit' name='delete' value='删除' class='user_change' style='margin-left: 40px'/>
+      <input type='hidden' name='course_id' value='{{ course.id }}' />
+    {% else %}
+    <td align='center'>    
+      <input type='submit' name='add' value='添加' class='user_change' />
+    {% endif %}
+    </td>
+</tr>
+</table>
+</form>
+
+{% endblock%}

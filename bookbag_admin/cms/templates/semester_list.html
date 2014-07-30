@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}学期设置{% endblock %}
+
+{% block content %}
+<form method='post' action='.'> {% csrf_token %}
+  <table class='list'>
+    <tr>
+      <th>选中</th>
+      <th>学期</th>
+      <th>学校</th>
+      <th>开始时间</th>
+      <th>结束时间</th>
+    </tr>
+    {% for semester in semesters %}
+    <tr class={% cycle 'row1' 'row2' %}>
+      <td>
+        <input type="checkbox" value="{{ semester.id }}" name="selected">
+      </td>
+      <td>{{ semester.name }}</td>
+      <td>
+        {% with semester.school as school %}
+          {% if school %}
+            {{ school.name }}
+          {% else %}
+          {% endif %}
+        {% endwith %}
+      </td>
+      <td>{{ semester.start_date|date:"Y-m-d" }}</td>
+      <td>{{ semester.end_date|date:"Y-m-d" }}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+      <td class=noborder></td>
+      <td class=noborder></td>
+      <td class=noborder></td>
+      <td class=noborder></td>
+      <td class=noborder colspan=2 align='right'>
+        <input type='submit' name='delete' value='删除' />
+      </td>
+    </tr>
+  </table>
+</form>
+
+<form method="post" action="."> {% csrf_token %}
+  <table cellspacing="10">
+    {% for field in form %}
+      {% include "includes/field.html" %}
+    {% endfor %}
+    <tr></tr>
+    <tr>
+      <td></td>
+      <td align="right">
+        <input type="submit" name="add" value="添加" class="user_change" />
+      </td>
+    </tr>
+  </table>
+  <input type="hidden" name="level" value="{{ level }}" />
+</form>
+{% endblock %}

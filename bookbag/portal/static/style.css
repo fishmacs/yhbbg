@@ -1,0 +1,219 @@
+@charset "utf-8";
+
+/* CSS Document */
+
+*{margin:0;padding:0;font-size:14px;}
+
+a,button{cursor:pointer;}
+
+a{text-decoration:none;}
+
+a:hover{text-decoration:underline;}
+
+img{border:0;}
+
+div{zoom:1;}
+
+span,em,samp,strong,small,big,u,i,h1,h2,h3,h4,h5,h6{font-style:normal;font-weight:normal;}
+
+ul{list-style:none;}
+
+.zo_body{position:relative;background:url(images/img_bg.jpg) repeat-x;width:740px;padding:0 14px 0;}
+
+.div_les{width:100%;}
+
+.div_les h2{height:20px;line-height:20px;font-size:14px;font-weight:bold;color:#2C2F33;padding:25px 0 10px 10px;}
+
+.div_les h3,.div_les h4{position:relative;background:url(images/img_h3_bg.jpg) repeat-x;height:32px;overflow:hidden;}
+
+.div_les h3 a.btn_left,.div_les h4 a.btn_left{float:left;width:51px;height:32px;overflow:hidden;}
+
+.div_les h3 a.btn_right,.div_les h4 a.btn_right{float:right;width:52px;height:32px;overflow:hidden;}
+
+.div_les h3 a.btn_left{background:url(images/img_btn_zs.jpg);}
+
+.div_les h3 a.btn_left:hover{background:url(images/img_btn_zs_cr.jpg);}
+
+.div_les h3 a.btn_right{background:url(images/img_btn_ys.jpg);}
+
+.div_les h3 a.btn_right:hover{background:url(images/img_btn_ys_cr.jpg);}
+
+.div_les h4 a.btn_left{background:url(images/img_btn_zx.jpg);}
+
+.div_les h4 a.btn_left:hover{background:url(images/img_btn_zx_cr.jpg);}
+
+.div_les h4 a.btn_right{background:url(images/img_btn_yx.jpg);}
+
+.div_les h4 a.btn_right:hover{background:url(images/img_btn_yx_cr.jpg);}
+
+.les_fy{position:absolute;width:100px;height:7px;top:50%;left:50%;margin:-4px 0 0 -32px;}
+
+.div_les h3 span,.div_les h4 span{background:url(images/img_point2.jpg);float:left;width:6px;height:7px;margin:0 5px;}
+
+.div_les h3 span.active,.div_les h4 span.active{background:url(images/img_point1.jpg);}
+
+.lesson{position:relative; overflow:hidden;}
+
+.les_left,.les_right{position:absolute;}
+
+.les_left{background:url(images/img_lesson_left.jpg);width:5px;overflow:hidden;left:0;top:0;}
+
+.les_right{background:url(images/img_lesson_right.jpg);width:5px;overflow:hidden;right:0;top:0;}
+
+.les_mid{background:url(images/img_les_bg.jpg) repeat-x;padding:0 5px;}
+
+.les_mid td{vertical-align:top;}
+
+.les_mid ul{width:740px/*100%*/;overflow:hidden;clear:both;}
+
+.les_mid ul li{float:left;width:340px;height:121px;padding:15px 0 0 10px;}
+
+.les_mid ul li.li_fgx{background:url(images/img_lesson_bg_fgx.jpg) repeat-y;width:2px;height:125px;padding:0;}
+
+.les_pic,.les_con{float:left;}
+
+.les_pic{background:url(images/img_lesson_bg.jpg);width:70px;height:100px;padding:2px 6px 6px 0px;}
+.les_pic img{width:70px;height:100px;}
+
+.les_con{padding-left:8px; width:256px; height:110px; position:relative;}
+
+.les_con h5{font-size:14px;font-weight:bold;color:#000000;line-height:20px;}
+
+/*.les_p p,.les_p a{float:left;}*/
+
+.les_p {position:absolute; bottom:0px;}
+
+.les_p p{width:250px;height:100px;line-height:20px;color:#4F5459;overflow:hidden;padding-right:10px;}
+
+.les_p table{padding-left:0px;padding-right:5px;overflow:hidden}
+
+.les_p a{background:url(images/img_btn_xx.jpg);background-size:100% 100%;width:56px;height:24px;line-height:25px;text-align:center;font-weight:bold;color:#FFFFFF;/* margin-left:5px; */}
+
+.les_p a:hover{background:url(images/img_btn_xx_cr.jpg);background-size:100% 100%;text-decoration:none;}
+
+.div_xx{position:absolute;width:754px;top:0;left:50%;margin:0 0 0 -377px;}
+
+.div_xx h4{position:relative;background:url(images/img_lesson_xx_bg1.png);height:92px;}
+.div_xx h4 a{position:absolute;/*background:url(images/img_close_btn.png);*/right:53px;bottom:12px;width:26px;height:26px;}
+.div_xx h5{background:url(images/img_lesson_xx_bg3.png);height:92px;}
+.div_xx .xx_ul{background:url(images/img_lesson_xx_bg2.png);width:650px;padding:0 52px;}
+
+.div_xx ul{padding:2px 0 0;z-index:1;}
+
+.div_xx ul li{width:620px;overflow:auto;clear:both;padding:13px 15px 15px;border-bottom:1px solid #AAAEB2;}
+
+.div_passwd {position:absolute;width:556px;top:0;left:50%;margin:30px 0 0 -280px;}
+
+.div_passwd h4{position:relative;background:url(images/img_floatform_bg1.png);height:68px;}
+
+.div_passwd h5{background:url(images/img_floatform_bg3.png);height:68px;}
+
+.div_passwd_form {background:url(images/img_floatform_bg2.png);width:452px;padding:0 52px;}
+
+.div_passwd_form span {
+    position:absolute;float:right;top:30px;left:500px;
+}
+
+.passwd_btn{width:80px;padding:40px 0 0 54px;}
+
+.passwd_btn a{background:url(images/img_btn_xx.jpg); background-size:100% 100%; display:block;width:80px;height:24px;line-height:24px;font-weight:bold;color:#FFFFFF;text-align:center;}
+
+.passwd_btn a:hover{background:url(images/img_btn_xx_cr.jpg); background-size:100% 100%; text-decoration:none;}
+
+.xx_pic{float:left;width:118px;height:168px;border:1px solid #7E8182;}
+
+.xx_pic img{width:118px;height:168px;}
+
+.xx_p{float:left;width:480px;padding-left:15px;}
+
+.xx_p h2{height:20px;line-height:20px;font-weight:bold;color:#2C2F33}
+
+.xx_p h3{line-height:32px;font-size:20px;font-weight:bold;}
+
+.xx_p p{height:120px;line-height:20px;overflow:hidden;color:#575757;}
+
+.xx_btn{float:right;width:123px;padding:140px 0 0 54px;}
+
+.xx_btn a{background:url(images/img_btn_xx.jpg);display:block;width:123px;height:24px;line-height:24px;font-weight:bold;color:#FFFFFF;text-align:center;}
+
+.xx_btn a:hover{background:url(images/img_btn_xx_cr.jpg);text-decoration:none;}
+
+.wrapper_1{position:relative;background:url(images/img_bg.jpg) repeat-x;width:988px;height:732px;padding:18px 18px 0;}
+
+.wrapper_1 .les_mid ul li{float:left;width:304px;height:91px;padding:15px 0 0 20px;}
+
+.wrapper_1 .les_mid ul li.li_fgx{background:url(images/img_lesson_bg_fgx.jpg) repeat-y;width:2px;height:106px;padding:0;}
+
+.wrapper_1 .les_p p{width:155px;height:60px;line-height:20px;color:#4F5459;overflow:hidden;padding-right:10px;}
+
+.wrapper_1 .les_left{background:url(images/img_lesson_left_1.jpg);width:5px;height:212px;overflow:hidden;left:0;top:0;}
+
+.wrapper_1 .les_right{background:url(images/img_lesson_right_1.jpg);width:5px;height:212px;overflow:hidden;right:0;top:0;}
+
+#nav {
+    float: right;
+}
+
+input {
+    display: block;
+}
+
+ul.tags, ul.tags li {
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+
+.errornote {
+    font-size: 12px !important;
+    display: block;
+    padding: 4px 5px 4px 25px;
+    margin: 0 0 3px 0;
+    border: 1px solid red;
+    color: red;
+    background: #ffc url(../img/admin/icon_error.gif) 5px .3em no-repeat;
+}
+
+.super {
+    vertical-align: super;
+    text-align: left;
+}
+
+.super a {
+    background:url(images/img_btn_xx_green.jpg);
+    background-size: 100% 100%
+}
+
+.sub {vertical-align: sub}
+
+.update_number {
+    font-family: sans-serif;
+    font-size: 8px;
+    font-weight: 900;
+    color: white;
+    vertical-align: super;
+}
+
+.update_mark {
+    padding-left: -5px;
+    width: 16px;
+    height: 16px;
+    background: url(images/update_mark.png) no-repeat;
+    vertical-align: super; 
+    text-align: center;
+}
+
+.dummy_mark {
+    width: 16px;
+    height: 16px;
+}
+
+.invisible {
+    display: none;
+}
+
+img.center { 
+    display: block;
+    margin-left: auto;
+    margin-right: auto; 
+}

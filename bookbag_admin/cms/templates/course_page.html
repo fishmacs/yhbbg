@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %} 课程 {% endblock %}
+{% block head %}{% endblock %}
+{% block content %}
+<div class=searchbar>
+  <label>您负责的课程: </label>
+<!--  
+  <a href='/inform_select/?next_url=/courses/' style='padding:0 0 0 240px'>通知更新</a>
+ -->
+</div>
+{% load myfilter %}
+<table class=list>
+  {% for grade,course in courses %}
+  <tr class={% cycle 'row1' 'row2' %}>
+    <td>
+      <a href='/coursewares/{{ course.id }}/{{ grade }}/' class='title'>
+        {{ grade|grade_name }}{{ course.course_name }} </a>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

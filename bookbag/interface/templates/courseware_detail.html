@@ -1,0 +1,100 @@
+{% extends "interface_base.html" %}
+{% block title %} {{ courseware.name }} {% endblock %}
+
+{% block external %}
+<link rel="stylesheet" href="{{ STATIC_URL }}jquery-ui-1.10.3/css/ui-lightness/jquery-ui-1.10.3.custom.min.css" type="text/css" />
+<script type="text/javascript" src="{{ STATIC_URL }}jquery-1.9.1.min.js" ></script>
+<script type="text/javascript" src="{{ STATIC_URL }}jquery.timer.js" ></script>
+<script type="text/javascript" src="{{ STATIC_URL }}jquery-ui-1.10.3/js/jquery-ui-1.10.3.custom.min.js" ></script>
+<script type="text/javascript" src="{{ STATIC_URL }}courseware.js"></script>
+{% endblock %}
+
+{% block content %}
+{% if license_msg %}
+  <h2 style='color:red;'>{{ license_msg }}</h2><br>
+{% endif %}
+
+{% load interface_filter %}
+
+{% if not newware %}
+  <div class=image_bg>
+    <img class=cover src="{{ courseware.get_image_url }}" />
+  </div>
+{% endif %}
+
+<label id='upload_id' style='display:none'>{{ upload_id }}</label>
+
+<form method='post' id='upload_form' action='.?upload_id={{ upload_id }}' enctype='multipart/form-data'> {% csrf_token %}
+  <table class="qbtable" width="578">
+    <tr>
+      <td width="124"><label>课程: </label></td>
+      <td width="442" class="tt_left"><label>{{ courseware.grade|grade_name }}{{ courseware.course.course_name }}</label></td>
+    </tr>
+    <tr>
+      <td width="124">{{ form.title.errors }}{{ form.title.label_tag }}: </td>
+      <td width="442" class="tt_left">{{ form.title }}</td>
+    </tr>
+    <tr>
+      <td width="124">{{ form.provider.label_tag}}: </td>
+      <td width="442" class="tt_left">{{ form.provider }}</td>
+    </tr>
+    <tr>
+      <td width="124">{{ form.category.label_tag }}: </td>
+      <td width="442" class="tt_left">{{ form.category }}</td>
+    </tr>
+    <tr>
+      <td width="124">{{ form.share.label_tag}}: </td>
+      <td width="442" class="tt_left">{{ form.share }}</td>
+    </tr>
+    <tr>
+      <td width="124">{{ form.description.label_tag }}: </td>
+      <td width="442" class="tt_left">{{ form.description }}</td>
+    </tr>
+    <tr>
+      <td width="124">{{ form.week.errors }}{{ form.week.label_tag }}: </td>
+      <td width="442" class="tt_left">{{ form.week }}</td>
+    </tr>
+    <tr>
+      <td width="124">{% if newware %}{{ form.file.errors }}{% endif %}{{ form.file.label_tag }}: </td>
+      <td width="442" class="tt_left">
+        <table class="tdinner">
+          <tr>
+            <td class="noborder">{{ form.file }}</td>
+            <td class="noborder"><ul class="errorlist"><li>可上传的文件类型: doc docx ppt pptx pdf</li><li>请不要上传大小超过20M的文件</ul></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td width="124">{{ form.image.label_tag }}: </td>
+      <td width="442" class="tt_left">{{ form.image }}</td>
+    </tr>
+    <tr>
+      <td width="124">{{ form.classes.label_tag }}: </td>
+      <td width="442" class="tt_left">{{ form.classes }}</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td class="tt_left">
+        <table>
+        <tr>
+        <td class="noborder">
+        {% if not newware %}
+          <input type='submit' name='edit' value='修改课件' width="60px" style="margin-left: 20px"/>
+        {% else %}
+          <input type='hidden' name='grade' value='{{ courseware.grade }}' />
+          <input type='hidden' name='course_id' value='{{ courseware.course_id }}' />
+          <input type='hidden' name='course_name' value='{{ courseware.course.course_name }}' />
+          <input type='submit' name='add' value='添加课件' width="60px" style="margin-left: 60px"/>
+        {% endif %}
+        </td>
+        <td width="100%" class="noborder"><div id="progressbar"></div></td>
+        </tr>
+        </table>
+        </td>
+    </tr>
+  </table>
+  <input type='hidden' id='newware' value='{{ newware }}' />
+  <input type="hidden" name="back_level" value="{{ back_level }}" />
+</form>
+{% endblock %}

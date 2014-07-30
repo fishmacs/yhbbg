@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}其它设置{% endblock %}
+
+{% block content %}
+<form method='post' action='.' enctype='multipart/form-data'> {% csrf_token %}
+  <p>{{ form.offline_timeout.errors }}</p>
+  <div class=searchbar>
+    <p>{{ form.offline_timeout.label_tag }}: {{ form.offline_timeout }}
+    <input type='submit' name='edit_offline_timeout' value='修改' class='courseware_submit' /></p>
+  </div>
+</form>
+{% endblock %}

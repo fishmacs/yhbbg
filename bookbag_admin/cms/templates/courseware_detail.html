@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %} {{ courseware.name }} {% endblock %}
+
+{% block external %}
+<link rel="stylesheet" href="{{ STATIC_URL }}jquery-ui-1.10.3/css/ui-lightness/jquery-ui-1.10.3.custom.min.css" type="text/css" />
+<script type="text/javascript" src="{{ STATIC_URL }}jquery-1.9.1.min.js" ></script>
+<script type="text/javascript" src="{{ STATIC_URL }}jquery.timer.js" ></script>
+<script type="text/javascript" src="{{ STATIC_URL }}jquery-ui-1.10.3/js/jquery-ui-1.10.3.custom.min.js" ></script>
+<script type="text/javascript" src="{{ STATIC_URL }}courseware.js"></script>
+{% endblock %}
+
+{% block content %}
+{% if license_msg %}
+  <h2 style='color:red;'>{{ license_msg }}</h2><br>
+{% endif %}
+
+{% load myfilter %}
+
+<div class=searchbar>
+  课程: <a href='/coursewares/{{ courseware.course_id }}/{{ courseware.grade }}/'>{{ courseware.grade|grade_name }}{{ courseware.course.course_name }}</a> 
+  {% if not newware %}
+    <div style='padding: 0 0 0 20px; display:inline'>
+      状态：<b><span id='courseware_state{{ courseware.id }}'>{{ courseware.state_str }}</span></b>
+    </div>
+    <div id='courseware_action' style='display:inline'>
+    {% with action=courseware.next_action %}
+      {% if action.0 %}
+        <a href='{{ action.1 }}' style='padding: 0 0 0 20px'>{{ action.0 }}</a>
+      {% else %}
+        {% if action.1 %}
+          <img width=24px height=24px style='padding: 0 0 0 20px' src={{ action.1 }}></img>
+        {% endif %}
+      {% endif %}
+    {% endwith %}
+    </div>
+    <div id='courseware_reconvert' style='display:none'>{{ courseware.reconvertable }}</div>
+    <a id='reconvert_url' href='javascript:void(0);' onclick='reconvert_confirm({{ courseware.id }})' style='padding: 0 0 0 240px; display:none'>重新转换</a>
+  {% endif %}
+</div>
+
+{% if not newware %}
+    <img class=cover src='{{ courseware.get_image_url }}'></img>
+{% endif %}
+<label id='upload_id' style='display:none'>{{ upload_id }}</label>
+
+<form method='post' id='upload_form' action='.?upload_id={{ upload_id }}' enctype='multipart/form-data'> {% csrf_token %}
+  <p>{{ form.title.errors }}</p>
+  <p>{{ form.title.label_tag }}: {{ form.title }}</p><br>
+  <p>{{ form.provider.label_tag}}: {{ form.provider }}</p>
+  <p>{{ form.category.label_tag }}: {{ form.category }}</p><br>
+  <p>{{ form.share.label_tag}}: {{ form.share }}</p><br>
+  <p>{{ form.description.errors }}</p>
+  <p>{{ form.description.label_tag }}: {{ form.description }}</p><br>
+  <p>{{ form.week.errors }}</p>
+  <p>{{ form.week.label_tag }}: {{ form.week }}</p><br>
+  {% if newware %}
+  <p>{{ form.file.errors }}</p>
+  {% endif %}
+  <p>{{ form.file.label_tag }}: {{ form.file }}</p><br>
+  <p>{{ form.image.label_tag }}: {{ form.image }}</p><br>
+  <p>{{ form.password.errors }}</p>
+  <p>{{ form.password.label_tag }}: {{ form.password }}</p><br>
+  <p>{{ form.password1.errors }}</p>
+  <p>{{ form.password1.label_tag }}: {{ form.password1 }}</p><br>
+  <p>{{ form.classes.label_tag }}: {{ form.classes }} </p>
+  {% if not newware %}
+  <input type='submit' name='edit' value='修改课件' class='courseware_submit' />
+  <input type='submit' name='delete' value='删除课件' class='courseware_submit' />
+  {% else %}
+  <input type='hidden' name='grade' value='{{ courseware.grade }}' />
+  <input type='hidden' name='course_id' value='{{ courseware.course_id }}' />
+  <input type='hidden' name='course_name' value='{{ courseware.course_name }}' />
+  <input type='submit' name='add' value='添加课件' class='courseware_submit' />
+  {% endif %}
+  <input type='hidden' id='newware' value='{{ newware }}' />
+</form>
+<div id="progressbar"></div>
+{% endblock %}

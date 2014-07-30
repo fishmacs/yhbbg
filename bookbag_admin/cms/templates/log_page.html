@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+
+{% block title %} 查看日志 {% endblock %}
+
+{% block content %}
+{% load pagination_tags %}
+{% autopaginate logs 20 %}
+<table class='list' id='log-list'>
+  <tr>
+    <th>名称</th>
+    <th>类型</th>
+    <th>操作</th>
+    <th>说明</th>
+    <th>操作人</th>
+    <th>时间</th>
+  </tr>
+{% for log in logs %}
+  <tr>
+    <td>
+      <a href='/check_log?content={{ log.content_type.pk }}&name={{ log.object_repr|iriencode }}'>{{ log.object_repr|default:'' }}</a>
+    </td>
+    <td>
+      <a href='/check_log?type={{ log.content_type.pk }}'>{% trans log.content_type.name %}</a>
+    </td>
+    <td>
+      {% if log.is_addition %}
+        添加
+      {% else %}
+        {% if log.is_change %}
+          修改
+        {% else %}
+          删除
+        {% endif %}
+      {% endif %}
+    </td>
+    <td>{{ log.change_message }}</td>
+    <td><a href='/check_log?user={{ log.user.id }}'>{{ log.user.username }}</a></td>
+    <td>{{ log.action_time|date:'Y-m-d H:i' }}</td>
+  </tr>
+{% endfor %}
+</table>
+{% paginate %}
+{% endblock %}

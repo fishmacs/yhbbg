@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %} 编辑调查 {% endblock %}
+
+{% block content %}
+<div class=searchbar>
+  <a href="/coursewares/{{ course_id}}">课件管理</a> > <a href="/survey/list/{{ course_id }}/">调查管理</a> > {% if new_vote %}创建{% else %}编辑{% endif %}
+</div>
+<div class=courseware_bg>
+<form method="post" action="." enctype="multipart/form-data"> {% csrf_token %}
+  {{ formset.management_form }}
+  <table cellspacing="20px">
+    <tr>
+      <td colspan=2>
+        {% if errors.title %}
+        <ul class="errorlist" style="margin-left: 10px"><li>{{ errors.title }}</li></ul>
+        {% endif %}
+      </td>
+      <td colspan=2>
+        {% if errors.url %}
+        <ul class="errorlist" style="margin-left: 40px"><li>{{ errors.url }}</li></ul>
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <td>标题:</td>
+      <td><textarea name="title" rows="3" cols="20">{{ vote.title }}</textarea></td>
+      <td style="padding-left: 40px">URL:</td>
+      <td>
+        <input value="{{ vote.url }}" name="url" />
+      </td>
+    </tr>
+    <tr>
+      <td>开始时间:</td>
+      <td>{{ start_time.date }}　{{ start_time.hour }} : {{ start_time.minute }}</td>
+      <td style="padding-left:40px">{{ start_time.manual }} 手动开始</td>
+    </tr>
+    <tr>
+      <td>结束时间:</td>
+      <td>{{ end_time.date }}　{{ end_time.hour }} : {{ end_time.minute }}
+      <td style="padding-left:40px">{{ end_time.manual }} 手动结束</td>
+    </tr>
+    <tr>
+      <td class=noborder colspan=2 align="right">
+        <input type="button" onclick="javascript:history.go(-1);" value="返　　回" />
+      </td>
+      <td class=noborder colspan=2 align="right">
+        <input type="submit" name="submit" value="{% if new_vote %}创建调查{% else %}修改调查{% endif %}" />
+      </td>
+    </tr>
+  </table>
+</form>
+</div>
+{% endblock %}

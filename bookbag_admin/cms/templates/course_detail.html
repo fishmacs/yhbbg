@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %} 课程详情 {% endblock %}
+
+{% block content %}
+
+<table class='list'>
+  <tr>
+    <th>课 程</th>
+    <th>英文名</th>
+    <th>bb code</th>
+    <th>描 述</th>
+  </tr>
+  <tr class=row1>
+    <td>{{ course.course_name }}</td>
+    <td>{{ course.english_name }}</td>
+    <td>{{ course.course.bb_code }}</td>
+    <td>{{ course.description }}</td>
+  </tr>
+</table>
+<div class=image_bg>
+<br>
+<form method='post' action='.' enctype='multipart/form-data'> {% csrf_token %}
+  <p>{{ form.image.label_tag }}:</p>
+  <img class=cover src={{ course.get_image_url }} />
+  <div class='searchbar'>
+    {{ form.image }}
+    <input type='submit' name='upload' value='上传图片' />
+  </div>
+</form>  
+</div>
+{% endblock %}
+

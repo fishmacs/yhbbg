@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}投票管理{% endblock %}
+
+{% block content %}
+<table class="list">
+  {% for c in courses %}
+  <tr class={% cycle "row1" "row2" %}>
+    {% with c.myclass as class %}
+    {% with c.course as course %}
+    <td>{{ class.get_grade_display }}{{ class.name }}</td>
+    <td>
+      <a href="/vote/list/{{ class.id }}_{{ course.id }}/">{{ course.course_name }}</a>
+    </td>
+    {% endwith %}
+    {% endwith %}
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}
+      
+    

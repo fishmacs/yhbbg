@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %} 管理员组 {% endblock %}
+
+{% block content %}
+<form method='post' action='.'> {% csrf_token %}
+<div class='searchbar'>
+  <p>{{ addform.username.errors }}</p>
+  {{ addform.username }}
+  <input type='submit' name='add' value='添加管理员' />
+</div>
+</form>
+<br>
+<form method='post' action='.'> {% csrf_token %}
+  <table class='list'>
+    <tr>
+      <th>选中</th>
+      <th>用户名</th>
+    </tr>
+    {% for manager in managers %}
+    <tr class={% cycle 'row1' 'row2' %}>
+      <td>
+        <input type='checkbox' value='{{ manager.id }}' name='selected'>
+      </td>
+      <td>{{ manager.username }}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+      <td class='noborder'></td>
+      <td class='noborder'>
+        <input type='submit' name='delete' value='删除管理员' style='padding:0 20px 0 20px' />
+      </td>
+    </tr>
+  </table>
+</form>
+{% endblock %}

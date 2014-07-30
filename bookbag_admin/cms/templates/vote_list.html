@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %} 投票管理 {% endblock %}
+
+{% load myfilter %}
+
+{% block content %}
+<form method='post' action='.'> {% csrf_token %}
+  <div class=searchbar>
+    <label>
+      <img alt="Search" src="{{ STATIC_URL }}images/icon_searchbox.png">
+    </label>
+    {{ form.name }}
+    <input type='submit' name='search' value='搜索投票' />
+    <img src="{{ STATIC_URL }}images/icon_add.jpg" style="padding: 0 0 0 160px">
+    <a href="/vote/add/{{ course_id }}/">创建投票</a>
+  </div>
+  <br>
+  {% load pagination_tags %}
+  {% autopaginate votes 25 %}
+  <table class="list middlefont">
+    <tr>
+      <th>选中</th>
+      <th>名称</th>
+      <th>类型</th>
+      <th>创建人</th>
+      <th>创建时间</th>
+      <th>状态</th>
+      <th>开始时间</th>
+      <th>结束时间</th>
+      <th></th>
+    </tr>
+    {% for vote in votes %}
+    <tr class={% cycle 'row1' 'row2' %}>
+      <td>
+        <input type='checkbox' value='{{ vote.id }}' name='selected'>
+      </td>
+      <td>
+        {% if vote.finished %}
+          <a href="/vote/detail/{{ vote.id }}/">{{ vote.title }}</a>
+        {% else %}
+          <a href="/vote/edit/{{ vote.id }}/">{{ vote.title }}</a>
+        {% endif %}
+      </td>
+      <td>{{ vote.get_kind }}</td>
+      <td>{{ vote.creator.name }}</td>
+      <td>{{ vote.created_time|date:'Y-m-d H:i' }}</td>
+      <td>{{ vote.get_status }}</td>
+      <td>
+        {{ vote.start_time|date:'Y-m-d H:i' }}
+        {% if not vote.started %}
+        　<a href="/vote/start/{{ vote.id }}/">现在开始</a>
+        {% endif %}
+      </td>
+      <td>
+        {{ vote.end_time|date:'Y-m-d H:i' }}
+        {% if vote.started and not vote.finished %}
+        　<a href="/vote/end/{{ vote.id }}/">现在结束</a>
+        {% endif %}
+      </td>
+      <td>
+        <a href="/vote/detail/{{ vote.id }}/">查看结果</a>
+      </td>
+    </tr>
+    {% endfor %}
+    <tr>
+      <td class=noborder colspan=6></td>
+      <td class=noborder colspan=2>
+        <input type='submit' name='delete' value='删除投票' />
+      </td>
+  </table>
+  {% paginate %}
+  <input type='hidden' name='page' value='{{ page }}' />
+</form>
+{% endblock %}
+

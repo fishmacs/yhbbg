@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}消息历史{% endblock %}
+
+{% block content %}
+<form method='post' action='.'>{% csrf_token %}
+  <div class=searchbar>
+    <label>
+      <img alt="Search" src="{{ STATIC_URL }}images/icon_searchbox.png">
+    </label>
+    {{ form.name }}
+    <input type='submit' name='search' value='搜索消息内容' />
+  </div>
+  <input type='hidden' name='find' value='{{ name }}' />
+</form>
+<br>
+{% load pagination_tags %}
+{% autopaginate msgs 25 %}
+<table class='list'>
+  <tr>
+    <th>发布人</th>
+    <th>内  容</th>
+    <th>时 间</th>
+  </tr>
+  {% for msg in msgs %}
+  <tr class={% cycle 'row1' 'row2' %}>
+    <td>{{ msg.user.username }}</td>
+    <td>{{ msg.message }}</td>
+    <td>{{ msg.time|date:'Y-m-d H:i' }}</td>
+  </tr>
+  {% endfor %}
+ </table>
+{% paginate %}
+
+{% endblock %}

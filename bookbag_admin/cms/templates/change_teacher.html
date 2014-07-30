@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}教师编辑{% endblock %}
+
+{% block content %}
+<a href='/teacher/list/'>教师管理</a> > {% if uid %}修改教师信息{% else %}添加教师{% endif %}
+<form method='post' action='.'> {% csrf_token %}
+<table cellspacing='10'>
+{% for field in form %}
+{% include "includes/field.html" %}
+{% endfor %}
+<tr>
+</tr>
+<tr>
+  <td>
+  </td>
+  <td align='right'>
+    {% if uid %}
+      <input type='submit' name='edit' value='修改' class='user_change' />
+      <input type='submit' name='delete' value='删除' class='user_change' />
+      <input type='hidden' name='uid' value='{{ uid }}' />
+    {% else %}
+      <input type='submit' name='add' value='添加' class='user_change' />
+    {% endif %}
+  </td>
+</tr>
+</table>
+</form>
+
+{% endblock%}

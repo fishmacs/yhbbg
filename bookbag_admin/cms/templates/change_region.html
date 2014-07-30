@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}修改区域{% endblock %}
+
+{% block content %}
+<a href='/region/list/'>区域管理</a> > {% if region %}修改区域{% else %}添加区域{% endif %}
+<form method='post' action='.' enctype='multipart/form-data'> {% csrf_token %}
+<table cellspacing='10'>
+{% for field in form %}
+{% include "includes/field.html" %}
+{% endfor %}
+<tr>
+  <td>
+  </td>
+  <td align='right'>
+    {% if region %}
+      <input type='submit' name='edit' value='修改' class='user_change' />
+      <input type='submit' name='delete' value='删除' class='user_change' />
+      <input type='hidden' name='class_id' value='{{ class.id }}' />
+    {% else %}
+      <input type='submit' name='add' value='添加' class='user_change' />
+    {% endif %}
+  </td>
+</tr>
+</table>
+</form>
+
+{% endblock%}

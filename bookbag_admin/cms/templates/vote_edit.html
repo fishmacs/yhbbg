@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block external %}
+<script type='text/javascript' src='{{ STATIC_URL }}vote.js'></script>
+{% endblock %}
+
+{% block title %} 编辑投票 {% endblock %}
+
+{% load myfilter %}
+{% block content %}
+<div class=searchbar>
+  <a href="/vote/list/{{ course_id }}/">投票管理</a> > {% if new_vote %}创建{% else %}编辑{% endif %}
+</div>
+<form method="post" action="." enctype="multipart/form-data"> {% csrf_token %}
+  {{ formset.management_form }}
+  <table cellspacing="20px">
+    {% if errors.title_error %}
+    <tr>
+      <td>
+        <ul class="errorlist" style="margin-left: 5px"><li>{{ errors.title_error }}</li></ul>
+      </td>
+    </tr>
+    {% endif %}
+    <tr>
+      <td>标题:</td>
+      <td><textarea name="title" rows="3" cols="20">{{ vote.title }}</textarea></td>
+      <td style="padding-left: 40px">类型:</td>
+      <td>
+        <input type="radio" value="single" name="kind" {% if vote.kind == "single" %}checked=1{% endif %} class="votetype" onclick="check_vote_type($(this).val());">单选
+        <input type="radio" value="multiple" name="kind" {% if vote.kind == "multiple" %}checked=1{% endif %} class="votetype" style="margin-left:20px" onclick="check_vote_type($(this).val());">多选
+        <input type="radio" value="multiple_ordered" name="kind" {% if vote.kind == "multiple_ordered" %}checked=1{% endif %} class="votetype" style="margin-left:20px" onclick="check_vote_type($(this).val());">多选有序
+      </td>
+    </tr>
+    <tr id="choice_number">
+      <td>最少选项:</td>
+      <td>
+        <select id="min_choice" name="min_choice">
+        {% for i in option_count|range:1 %}
+          <option value="{{ i }}" {% if i == vote.min_choice %}selected=1{% endif %}>{{ i }}</option>
+        {% endfor %}
+        </select>
+      </td>
+      <td style="padding-left:40px">最多选项:</td>
+      <td>
+        <select id="max_choice" name="max_choice">
+        {% for i in option_count|range:1 %}
+          <option value="{{ i }}" {% if i == vote.max_choice %}selected=1{% endif %}>{{ i }}</option>
+        {% endfor %}
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>开始时间:</td>
+      <td>{{ start_time.date }}　{{ start_time.hour }} : {{ start_time.minute }}</td>
+      <td style="padding-left:40px">{{ start_time.manual }} 手动开始</td>
+    </tr>
+    <tr>
+      <td>结束时间:</td>
+      <td>{{ end_time.date }}　{{ end_time.hour }} : {{ end_time.minute }}
+      <td style="padding-left:40px">{{ end_time.manual }} 手动结束</td>
+    </tr>
+    {% if errors.option_error %}
+    <tr>
+      <td>
+        <ul class="errorlist" style="margin-left: 5px"><li>{{ errors.option_error }}</li></ul>
+      </td>
+    </tr>
+    {% endif %}
+    {% for option in vote.options %}
+      {% cycle "<tr><td>" "<td style='padding-left: 40px'>" %}
+        选项{{ forloop.counter }}:</td>
+        <td><textarea id="option{{ forloop.counter }}" name="option{{ forloop.counter }}" rows="3" cols="20">{{ option.content }}</textarea></td>
+      {% cycle "" "</tr>" %}
+    {% endfor %}
+    <tr>
+      <td class=noborder></td>
+      <td class=noborder align="right">
+        <input type="button" onclick="javascript:history.go(-1);" value="返　　回" />
+      </td>
+      <td class=noborder align="right">
+        <input type="button" onclick="add_option();" value="添加选项" />
+      </td>      
+      <td class=noborder align="right">
+        <input type="submit" name="submit" value="{% if new_vote %}创建投票{% else %}修改投票{% endif %}" />
+      </td>
+    </tr>
+  </table>
+</form>
+<label style="display:none" id="option_count">{{ option_count }}</label>
+{% endblock %}

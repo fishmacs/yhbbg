@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %} {{ user.username }} {% endblock %}
+{% block content %}
+  {% for msg in msgs %}
+    <p>{{ msg }}</p>
+  {% endfor %}
+{% endblock %}

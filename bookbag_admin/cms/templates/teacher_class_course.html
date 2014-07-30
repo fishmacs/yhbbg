@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}教师 班级/课程设置{% endblock %}
+
+{% block content %}
+<a href='/teacher/list/'>教师管理</a> > 课程设置
+<br><br>
+<form method='post' action='.'> {% csrf_token %}
+  <table class='list'>
+    <tr>
+      <th>选中</th>
+      <th>年级</th>
+      <th>班级</th>
+      <th>课程</th>
+    </tr>
+    {% for x in queryset %}
+    <tr class={% cycle 'row1' 'row2' %}>
+      <td>
+        <input type="checkbox" value="{{ x.id }}" name="selected">
+      </td>
+      <td>{{ x.myclass.get_grade_display }}</td>
+      <td>{{ x.myclass.name }}</td>
+      <td>{{ x.course.course_name }}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+      <td class=noborder></td>
+      <td class=noborder></td>
+      <td class=noborder colspan=2 align='right'>
+        <input type='submit' name='delete' value='删除' />
+      </td>
+    </tr>
+  </table>
+  <input type='hidden' name='grade1' value='{{ grade }}' />
+</form>
+
+<form method="post" action="."> {% csrf_token %}
+<table cellspacing='10'>
+{% for field in form %}
+{% include "includes/field.html" %}
+{% endfor %}
+<tr>
+</tr>
+<tr>
+  <td>
+  </td>
+  <td align='right'>
+    <input type='submit' name='add' value='添加' class='user_change' />
+  </td>
+</tr>
+</table>
+</form>
+  
+{% endblock %}
+      
+        

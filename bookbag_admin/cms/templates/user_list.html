@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}用户管理{% endblock %}
+
+{% block content %}
+<form method='post' action='.'> {% csrf_token %}
+  <div class=searchbar>
+    <label>
+      <img alt="Search" src="{{ STATIC_URL }}images/icon_searchbox.png">
+    </label>
+    {{ form.username }}
+    {{ form.kind }}
+    <input type='submit' name='search' value='搜索学生' />
+    <a class='addlink' href='/student/add'>添加学生</a>
+<!--
+    <a class='importlink' href='/import/student/'>批量导入</a>
+    <a class='delete_link' href='/batch_del/student/'>批量删除</a>
+-->
+  </div>
+</form>
+<br>
+{% load pagination_tags %}
+{% autopaginate profiles 25 %}
+{% load myfilter %}
+<form method='post' action='.'> {% csrf_token %}
+  <table class='list'>
+    <tr>
+      <th>选中</th>
+      <th>用户id</th>
+      <th>用户姓名</th>      
+      <th>班级</th>
+      <th>设备号</th>
+    </tr>
+    {% for profile in profiles %}
+    <tr class={% cycle 'row1' 'row2' %}>
+      <td>
+        <input type='checkbox' value='{{ profile.user.id }}' name='selected'>
+      </td>
+      <td><a href='/student/edit?uid={{ profile.user.id}}'>{{ profile.user.username }}</a></td>
+      <td>{{ profile.user.first_name }}</td>
+      <td>{{ profile.myclass.get_name }}</td>
+      <td>{{ profile.device_id }}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+      <td class=noborder colspan=2>
+        <input type='submit' name='delink' value='解除绑定' />
+      </td>
+      <td class=noborder></td>
+      <td class=noborder></td>
+      <td class=noborder colspan=2 align='right'>
+        <input type='submit' name='delete' value='删除用户' />
+      </td>
+    </tr>
+  </table>
+  <input type='hidden' name='username' value='{{ username }}' />
+  <input type='hidden' name='kind' value='{{ kind }}' />  
+  <input type='hidden' name='page' value='{{ page }}' />
+</form>
+{% paginate %}
+{% endblock %}

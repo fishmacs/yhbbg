@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}用户管理{% endblock %}
+
+{% block content %}
+<form method='post' action='.'> {% csrf_token %}
+  <div class=searchbar>
+    <label>
+      <img alt="Search" src="{{ STATIC_URL }}images/icon_searchbox.png">
+    </label>
+    {{ form.name }}
+    <input type='submit' name='search' value='搜索管理员' />
+    <a class='addlink' href='/admin/add'>添加管理员</a>
+  </div>
+  <input type='hidden' name='find' value='{{ username }}' />
+</form>
+<br>
+{% load pagination_tags %}
+{% autopaginate profiles 25 %}
+{% load myfilter %}
+<form method='post' action='.'> {% csrf_token %}
+  <table class='list'>
+    <tr>
+      <th>选中</th>
+      <th>用户id</th>
+      <th>用户类型</th>
+      <th>设备号</th>
+      <th>电子邮件</th>
+    </tr>
+    {% for profile in profiles %}
+    <tr class={% cycle 'row1' 'row2' %}>
+      <td>
+        <input type='checkbox' value='{{ profile.user.id }}' name='selected'>
+      </td>
+      <td><a href='/admin/edit?uid={{ profile.user.id}}'>{{ profile.user.username }}</a></td>
+      <td>{{ profile.get_usertype_display }}</td>
+      <td>{{ profile.device_id }}</td>
+      <td>{{ profile.user.email }}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+      <td class=noborder colspan=2>
+        <input type='submit' name='delink' value='解除绑定' />
+      </td>
+      <td class=noborder></td>
+      <td class=noborder></td>
+      <td class=noborder colspan=2 align='right'>
+        <input type='submit' name='delete' value='删除管理员' />
+      </td>
+    </tr>
+  </table>
+  <input type='hidden' name='find' value='{{ username }}' />
+  <input type='hidden' name='page' value='{{ page }}' />
+</form>
+{% paginate %}
+{% endblock %}

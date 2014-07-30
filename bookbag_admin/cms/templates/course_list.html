@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %} 课程管理 {% endblock %}
+
+{% block content %}
+<form method='post' action='.'> {% csrf_token %}
+  <div class=searchbar>
+    <label>
+      <img alt="Search" src="{{ STATIC_URL }}images/icon_searchbox.png">
+    </label>
+    {{ form.course }}
+    {{ form.type }}
+    <input type='submit' name='search' value='搜索课程' />
+    <a class='addlink' href='/course/add'>添加课程</a>
+  </div>
+  <input type='hidden' name='find' value='{{ course }}' />  
+</form>
+<br>
+{% load pagination_tags %}
+{% autopaginate courses 25 %}
+<form method='post' action='.'> {% csrf_token %}
+  <table class='list'>
+    <tr>
+      <th>选中</th>
+      <th>课程名</th>
+      <th>英文名</th>
+      <th>课程代码</th>
+    </tr>
+    {% for course in courses %}
+    <tr class={% cycle 'row1' 'row2' %}>
+      <td>
+        <input id='{{ course.id }}' type='checkbox' value='{{ course.id }}' name='selected'>
+      </td>
+      <td><a href='/course/edit?course_id={{ course.id }}'>{{ course.course_name }}</a></td>
+      <td>{{ course.english_name }}</td>
+      <td>{{ course.cid }}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+      <td class=noborder colspan=6>
+        <input type='submit' name='delete' value='删除课程' />
+      </td>
+  </table>
+  <input type='hidden' name='find' value='{{ course }}' />
+  <input type='hidden' name='type' value='{{ type }}' />
+  <input type='hidden' name='page' value='{{ page }}' />
+</form>  
+{% paginate %}
+{% endblock %}
+

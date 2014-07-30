@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %} 区域管理 {% endblock %}
+
+{% block content %}
+<form method='post' action='.'> {% csrf_token %}
+  <div class=searchbar>
+    <label>
+      <img alt="Search" src="{{ STATIC_URL }}images/icon_searchbox.png">
+    </label>
+    {{ form.name }}
+    {{ form.kind }}
+    <input type='submit' name='search' value='搜索区域' />
+    <a class='addlink' href='/region/add/'>添加区域</a>
+  </div>
+</form>
+<br>
+{% load pagination_tags %}
+{% autopaginate regions 25 %}
+<form method='post' action='.'> {% csrf_token %}
+  <table class='list'>
+    <tr>
+      <th>选中</th>
+      <th>区域</th>
+      <th>代码</th>
+    </tr>
+    {% for region in regions %}
+    <tr class={% cycle 'row1' 'row2' %}>
+      <td>
+        <input type='checkbox' value='{{ region.id }}' name='selected'>
+      </td>
+      <td><a href='/region/edit/{{ region.id }}/'>{{ region.name }}</a></td>
+      <td>{{ region.code }}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+      <td class=noborder colspan=6>
+        <input type='submit' name='delete' value='删除区域' />
+      </td>
+  </table>
+  <input type='hidden' name='find' value='{{ search }}' />
+  <input type='hidden' name='kind' value='{{ search_type }}' />
+  <input type='hidden' name='page' value='{{ page }}' />
+</form>  
+{% paginate %}
+{% endblock %}
+

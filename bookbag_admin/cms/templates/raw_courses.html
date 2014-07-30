@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %} 查看日志 {% endblock %}
+
+{% block content %}
+<form method='post' action='/search_course/'> {% csrf_token %}
+  <div class=searchbar>
+    <label>
+      <img alt="Search" src="{{ STATIC_URL }}images/icon_searchbox.png">
+    </label>
+    {{ form.course }}
+    {{ form.type }}
+    <input type='submit' name='search' value='搜索课程' />
+  </div>
+  <input type='hidden' name='find' value='{{ course }}' />  
+</form>
+<br>
+{% load pagination_tags %}
+{% autopaginate courses 25 %}
+<form method='post' action='/add_course/'> {% csrf_token %}
+  <table class='list'>
+    <tr>
+      <th>选中</th>
+      <th>课程名</th>
+      <th>bb_code</th>
+      <th>课程 id</th>
+      <th>开始日期</th>
+      <th>结束日期</th>
+    </tr>
+    {% for course in courses %}
+    <tr class={% cycle 'row1' 'row2' %}>
+      <td>
+        {% if course.course_id in added %}
+          <img src='{{ STATIC_URL }}images/check_mark.png'></img>
+        {% else %}
+          <input id='course_{{ forloop.counter0 }}' type='checkbox'
+                 value='{{ course.course_id }}$$${{ course.bb_code }}$$${{ course.course_name }}$$${{ course.course_start_date|date:'Y.m.d' }}$$${{ course.course_end_date|date:'Y.m.d' }}' name='selected'>
+        {% endif %}
+      </td>
+      <td>{{ course.course_name }}</td>
+      <td>{{ course.bb_code }}</td>
+      <td>{{ course.course_id }}</td>
+      <td>{{ course.course_start_date|date:'Y-m-d' }}</td>
+      <td>{{ course.course_end_date|date:'Y-m-d' }}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+      <td class=noborder colspan=6>
+        <input type='submit' name='add' value='添加课程' />
+      </td>
+    </tr>
+  </table>
+  <input type='hidden' name='find' value='{{ course }}' />
+  <input type='hidden' name='type' value='{{ type }}' />
+  <input type='hidden' name='page' value='{{ page }}' />
+</form>  
+{% paginate %}
+{% endblock %}
+

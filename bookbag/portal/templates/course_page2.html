@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block title %}课件{% endblock %}
+
+{% block external %}
+<link rel='stylesheet' href='{{ STATIC_URL }}jquery-ui-1.8.23.css' type='text/css'/ media='screen'>
+
+<script language="javascript" src="{{ STATIC_URL }}jquery-1.4.4.min.js"></script>
+<script language="javascript" src="{{ STATIC_URL }}jquery.tmpl.min.js"></script>
+<script language="javascript" src="{{ STATIC_URL }}jquery-ui-1.8.23.min.js"></script>
+<script type='text/javascript'>
+  var json_data = {{ json_wares|safe }};
+</script>
+<script type='text/javascript' src='{{ STATIC_URL }}course.js'></script>
+{% endblock %}
+{% block head %}{% endblock %}
+{% block content %}
+{% load myfilter %}
+<div class="div_les" id="courselist">
+  <table width='100%'>
+  <tr>
+  <td>
+  <h2>
+    <span id='username'>{{ username }}</span>, 电子书包欢迎您!
+  </h2>
+  </td>
+  {% if update_url %}
+  <td align='right' style='padding: 18px 0px 0'>
+    <a href='javascript:void(0);' onclick="show_password_form()"'>修改密码</a>
+    <a style='padding:0 10px 0 14px' href='{{ update_url }}'>更新</a>
+  </td>
+  {% else %}
+  <td align='right' style='padding: 18px 10px 0'>
+    <a href='javascript:void(0);' onclick="show_password_form()"'>修改密码</a>
+  </td>
+  {% endif %}
+  </tr>
+  </table>
+  <h3>
+	<a href="javascript:void(0);" onclick="prev_page()" class="btn_left"></a>
+	<a href="javascript:void(0);" onclick="next_page()" class="btn_right"></a>
+	<div class="les_fy">
+	</div>
+  </h3>
+  <div class="lesson">
+    <div class="les_mid">
+      <table>
+        <tr id='course_pages'>
+        </tr>
+      </table>
+      <ul id='all_course_items' style='display:none'>
+        {% for course in courses %}
+        <li id='course_item_{{ forloop.counter0 }}'>
+          <div class="les_pic"><img src='{{ course.get_image_url }}' /></div>
+          <div class="les_con">
+            <h5><a href='#' class='title'>{{ course.name }} </a></h5>
+  		    {{ course.description }}
+            <div class="les_p">
+              <table>
+              {% if course.coursewares %}
+                {% with course.coursewares.iterkeys|sort_category as categories %}
+                {% for cat in categories %}
+                  {% if forloop.counter0|mod:3 == 0 %}
+                    {% if forloop.counter > 0 %}
+                      </tr>
+                    {% endif %}
+                    <tr>
+                  {% endif %}
+                  <td class=super>
+				    <a href="javascript:void(0);" onclick="switchdetail('{{ course.id }}', '{{ cat }}')">
+                      {{ cat|get_category_name }}
+                    </a>
+                  </td>
+                  {% with course.newwares|get:cat as wares %}
+                    {% if wares %}
+                      <td class=update_mark id=update_number{{ course.id }}_{{ cat }}>
+                        <span class=update_number>
+                          {{ wares }}
+                        </span>
+                      </td>
+                    {% endif %}
+                  {% endwith %}
+ 		        {% endfor %}
+                </tr>
+                {% endwith %}
+              {% else %}
+  			    <tr><td><a href="javascript:void(0);">没有课件</a></td></tr>
+              {% endif %}
+              </table>
+		    </div>
+	      </div>
+        </li>
+        {% endfor %}
+      </ul>
+  	</div>
+  </div>
+  <h4>
+	<a href="javascript:void(0);" onclick="prev_page()" class="btn_left"></a>
+	<a href="javascript:void(0);" onclick="next_page()" class="btn_right"></a>
+	<div class="les_fy">
+	</div>
+  </h4>
+</div>
+<div class="div_xx" id="coursedetail" style="display:none;">
+</div>
+<div class='div_passwd' id="password_form" style='display:none;'>
+  <h4></h4>
+  <div class='div_passwd_form'>
+    <span>
+      <a href="javascript:void(0);" onclick="cancel_passwd()">
+        <img src="{{ STATIC_URL }}images/closeicon.png" />
+      </a>
+    </span>
+  <center>
+  <div id='passwd_form'>
+  <label id='passwd_error' class='errornote' style='display:none;'></label>
+  <table width='70%' cellspacing='20px'>
+    <tr>
+      <td><label>当前密码：</label></td>
+      <td><input id='old_passwd' type='password'></td>
+    </tr>
+    <tr>
+      <td><label>新密码(至少6位)：</label></td>
+      <td><input id='new_passwd' type='password'><td>
+    </tr>
+    <tr>
+      <td><label>重复新密码：</label></td>
+      <td><input id='new_passwd1' type='password'><td>
+    </tr>
+    <tr>
+      <td>
+        <div class='passwd_btn'>
+          <a href='javascript:void(0);' onclick='cancel_passwd()'>取消</a>
+        </div>
+      </td>
+      <td>
+        <div class='passwd_btn'>
+          <a href='javascript:void(0);' onclick="commit_passwd_change()">修改</a>
+        </div>
+      </td>
+    </tr>
+  </table>
+  </div>
+  <img id='loading_image' height="32" weight="32" src="{{ STATIC_URL }}images/loading.gif" style='position: absolute; display:none;'/>
+  </center>
+  </div>
+  <h5></h5>
+</div>
+{% load mytag %}
+<script id="courseware_template" type="text-x-jQeury-tmpl">
+  <h4><a href="#"></a></h4>
+  <div class="xx_ul">
+    <span style="position:absolute;float:right;top:40px;left:685px"><a href="javascript:void(0);" onclick="switchcourse(${courseid}, '${category}')"><img src="/static/images/closeicon.png" /></a></span>
+	<ul>
+      {% raw %}{{ each coursewares }}{% endraw %}
+      <li id="cate_${category}_${$value.id}">
+        <div class="xx_pic"><img src="${$value.image}" /></div>
+		<div class="xx_p">
+		  <h3>
+            课件：${$value.name}
+            {% raw %}
+            {{ if $value.new }}
+              <img id='download_new_${$value.id}' align='top' src='/static/images/update_new.png'></img>
+            {{ /if }}
+            <span id='downloaded_${$value.id}' style='color:#FF0000;{{ if !$value.downloaded }}display:none;{{ /if }}'>{% endraw %}下载</span>
+          </h3>
+		  <h2>课程：${get_course_name($value)}</h2>
+		  <h2>类型：${get_category_name($value)}</h2>
+          <p>{{ courseware.description }}</p>
+		</div>
+		<div class="xx_btn">
+          <a id='courseware_url_${$value.id}' href='${decorate_url(courseid,category,$value)}' onclick='{return confirm_download(${$value.id}, ${$value.downloaded});}'>已下载</a>
+        </div>
+        <!-- <div class="xx_btn"><a href="javascript:void(0);" onclick="download_ok({{ courseware.courseid }}, {{ courseware.id }}, '{{ courseware.category }}')">下载</a></div> -->
+      </li>
+      {% raw %}{{ /each }}{% endraw %}
+	</ul>
+  </div>
+  <h5></h5>
+</script>
+{% endblock %}
+
+{% block other %}
+<div id='confirm_dialog' style='display:none'>
+  <div class='ui-dialog-content ui-widget-content'>
+    <span class="ui-icon ui-icon-alert" style='float:left; margin:0 7px 20px 0'></span>
+    <p>该课件已经下载过，重新下载将覆盖旧的课件，确定要下载吗？</p>
+  </div>
+</div>
+{% endblock %}

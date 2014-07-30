@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %} 查看日志 {% endblock %}
+
+{% block content %}
+<form method='post' action='.'> {% csrf_token %}
+  <table>
+    <tr><td>{{ form.course.errors }}</td></tr>
+    <tr>
+      <td>{{ form.course }}</td>
+      <td>{{ form.type }}</td>
+      <td><input type='submit' name='search' value='搜索课程' /></td>
+    </tr>
+  </table>
+</form>
+
+{% load pagination_tags %}
+{% autopaginate courses 25 %}
+<form method='post' action='.'> {% csrf_token %}
+  <table>
+    {% for course in courses %}
+    <tr>
+      <td>
+        <input id='course_{{ forloop.counter0 }}' type='checkbox'
+               value='{{ course.course_id }}' name='selected'>
+      </td>
+      <td>{{ course.get_name }}</td>
+      <td>{{ course.course_id }}</td>
+      <td>{{ course.course_start_date|date:'Y-m-d' }}</td>
+      <td>{{ course.course_end_date|date:'Y-m-d' }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  <input type='hidden' name='search' value='{{ search }}' />
+  <input type='hidden' name='type' value='{{ type }}' />
+</form>  
+{% paginate %}
+{% endblock %}
+

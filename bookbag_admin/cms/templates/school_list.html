@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %} 学校管理 {% endblock %}
+
+{% block content %}
+<form method='post' action='.'> {% csrf_token %}
+  <div class=searchbar>
+    <label>
+      <img alt="Search" src="{{ STATIC_URL }}images/icon_searchbox.png">
+    </label>
+    {{ form.name }}
+    {{ form.kind }}
+    <input type='submit' name='search' value='搜索学校' />
+    <a class='addlink' href='/school/add/{{ region }}/'>添加学校</a>
+  </div>
+</form>
+<br>
+{% load pagination_tags %}
+{% autopaginate schools 25 %}
+<form method='post' action='.'> {% csrf_token %}
+  <table class='list'>
+    <tr>
+      <th>选中</th>
+      <th>学校名称</th>
+      <th>学校代码</th>
+      <th>学校类型</th>
+      <th>学校地址</th>
+      <th>学校电话</th>
+    </tr>
+    {% for school in schools %}
+    <tr class={% cycle 'row1' 'row2' %}>
+      <td>
+        <input type='checkbox' value='{{ school.id }}' name='selected'>
+      </td>
+      <td><a href='/school/edit/{{ school.id }}/'>{{ school.name }}</a></td>
+      <td>{{ school.code }}</td>
+      <td>{{ school.get_type }}</td>
+      <td>{{ school.address }}</td>
+      <td>{{ school.telphone }}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+      <td class=noborder colspan=6>
+        <input type='submit' name='delete' value='删除学校' />
+      </td>
+  </table>
+  <input type='hidden' name='find' value='{{ search }}' />
+  <input type='hidden' name='kind' value='{{ search_type }}' />
+  <input type='hidden' name='page' value='{{ page }}' />
+</form>  
+{% paginate %}
+{% endblock %}
+

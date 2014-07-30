@@ -1,0 +1,219 @@
+BODY,H1,H2,H3,H4,H5,H6,HR,p,BLOCKQUOTE,DL,DT, DD,UL,OL,LI,PRE,FORM,FIELDSET,LEGEND,BUTTON,INPUT,TEXTAREA,TEXTBOX,TH,TD,form{
+	PADDING: 0px; MARGIN: 0px;
+}
+
+BODY ,BUTTON,INPUT,SELECT,TEXTAREA,INPUT,SELECT,TEXTBOX,TEXTAREA,label {
+	FONT: 12px/1.5 tahoma,arial,宋体,sans-serif
+}
+
+H1, H2,H3,H4,H5,H6,BUTTON {FONT-SIZE: 100%}
+
+ADDRESS,CITE,DFN,EM,VAR {FONT-STYLE: normal}
+
+CODE,KBD,PRE,SAMP {FONT-FAMILY: courier new,courier,monospace}
+
+SMALL {FONT-SIZE: 12px}
+/* UL,OL {LIST-STYLE-TYPE: none} */
+
+a:link,a:visited{color:#4e4e4e;text-decoration:none;} 
+a:hover,a:active{color:#55a10f;text-decoration:underline;} 
+
+SUP {VERTICAL-ALIGN: text-top}
+SUB {VERTICAL-ALIGN: text-bottom}
+LEGEND {	COLOR: #000}
+FIELDSET,IMG {BORDER: 0px}
+TABLE {BORDER-SPACING: 0; BORDER-COLLAPSE: collapse}
+H1 {FONT-SIZE: 18px}
+H2 {FONT-SIZE: 16px}
+H3 {FONT-SIZE: 14px}
+TEXTAREA {resize: none}
+TEXTAREA:focus {OUTLINE-STYLE: none}
+TABLE {BORDER-SPACING: 0; BORDER-COLLAPSE: collapse;
+    height: 25px;
+}
+  .clear {clear:both;height: 0;line-height: 0;font-size: 0;}
+
+body { margin:0 auto; background:#ffffff;
+    height: 108px;
+}
+
+#container {margin:0 auto; width:1000px;}
+#header { width:100%;height:28px; background:#f2f2f2; border-bottom:1px solid #d7d7d7;}
+.wrap {margin:0 auto; width:1000px;line-height:28px;}
+#menu_box { height:76px; }
+#menu_box #logo {float:left;margin:32px auto 0 2px}
+#mainContent { width:1000px;overflow:hidden; margin-bottom:5px;background:#fff;border:1px solid #c0d1b6}
+
+#left_sidebar { float:left; width:158px; background:#efefef url(../images/lf_bg.png) repeat-y top left;}
+#right_sidebar { float:right; width:220px; margin:0 auto;}
+#content { margin:0 auto; padding:15px;line-height:200%;}
+#footer { width:1000px;height:60px; margin:0 auto;text-align:center;background:#f2f2f2;line-height:60px;}
+
+/* ul {margin:10px } */
+/* ul li { height:24px;line-height:150%;text-indent:2.2em;background:url(../images/list.gif) no-repeat top left;} */
+
+/* ----------------------顶部菜单-------------------*/
+#head_menu  {float:right;width:586px;margin:0px auto;height:28px;}
+#head_menu  ul li {list-style:none;line-height:28px;}
+#head_menu  li {float:left;display:block;text-align:center;position:relative;margin-right:10px;border-left:1px solid #f2f2f2;border-right:1px solid #f2f2f2;}
+#head_menu  li:hover {padding: 0px;background: #F4F4F4;}
+#head_menu  li a {color: #4e4e4e;display:block;outline:0;text-decoration:none;padding: 0 5px;}
+#head_menu  li:hover a {color:#5eb618;text-decoration:underline;}
+#head_menu  li .drop {padding-right:21px;background:url("../images/arrow_down.gif") no-repeat right 5px;}
+#head_menu  li.menucut {width:1px;color:#b7b7b7;line-height:24px;}
+#head_menu  li:hover .drop {background:url("../images/arrow.gif") no-repeat right 6px;}
+
+#head_menu  li:hover .dropdown_1column {left:-1px;top:auto;}
+.col_1{display:inline;float: left;position: relative;margin-left: 5px;margin-right: 5px;width:130px;}
+
+.dropdown_1column{margin:4px auto;float:left;position:absolute;left:-999em; /* Hides the drop down */text-align:left;padding:10px 5px 10px 5px;border:1px solid #ccc;border-top:none;background:url(../images/EventPhoto1.jpg);width: 130px;z-index:999;}
+#head_menu  li:hover div a {font-size:12px;color:#4e4e4e;}
+#head_menu  li:hover div a:hover {color:#5eb618;}
+#head_menu  li ul {list-style:none;padding:0;	margin:0 0 12px 0;}
+#head_menu  li ul li {font-size:12px;	line-height:24px;position:relative;padding:0;margin:0;border:none;	text-align:left;width:120px;}
+#head_menu  li ul li a{background:url("img/subarrow.gif") no-repeat left 9px;padding-left:10px;}
+#head_menu  li ul li:hover {background:none;border:none;padding:0;margin:0;}
+.textarea_box {width:578px;height:128px;margin:15px auto;background:#f4f4f4;border:1px solid #d1d1d1}
+.textarea_box .post_sort {border-top:1px solid #d1d1d1;margin:15px 0 ;line-height:150%;padding:15px;}
+.head_info {float:left;width:150px;}
+/* ----------------------主菜单-------------------*/
+#menu {float:right;list-style:none;width:746px;margin:30px auto 0px auto;height:36px;padding:0px 20px 0px 20px;background: #7dcb2d;}
+#menu ul li {text-align:left;text-shadow: 1px 1px 1px #FFFFFF;}
+
+#menu li {float:left;display:block;text-align:center;position:relative;padding: 2px 5px ;margin-right:15px;border:none;}
+#menu li:hover {background: #f4f4f4;border-top:1px solid #d1d1d1}
+#menu li a {font-weight:bold;font-size:14px; color: #EEEEEE;display:block;outline:0;text-decoration:none;line-height:32px;}
+#menu li a.current{ display:block;outline:0;background:#51b006}
+#menu li:hover a {color:#161616;}
+#menu li .drop {padding-right:21px;background:url("../images/menuarrow.gif") no-repeat right 7px;}
+#menu li:hover .drop {background:url("../images/arrow.gif") no-repeat right 7px;}
+
+#menu li:hover .dropdown_1column {left:-1px;top:auto;}
+.col_1{display:inline;float: left;position: relative;margin:0 5px;width:110px;}
+
+.dropdown_1column{margin:0 auto;float:left;position:absolute;left:-999em; /* Hides the drop down */text-align:left;padding:0px;border:1px solid #ccc;border-top:none;background:#F4F4F4;width: 110px;}
+#menu li:hover div a {font-size:12px;color:#4e4e4e;font-weight:normal;}
+#menu li:hover div a:hover {color:#4e4e4e;}
+#menu li ul {list-style:none;padding:0;	margin:0 0 12px 0;padding:2px 0 0 0;}
+#menu li ul li {line-height:24px;position:relative;padding:0;margin:0;text-align:left;width: 100px}
+#menu li ul li a{display:block;padding-left:10px;}
+#menu li ul li:hover {background:#e6e6e6;border:none;padding:0;margin:0;}
+
+#lf_hdimg { margin:0px;}
+#lf_hdimg img {width:110px;height:110px;margin:15px;border:1px solid #ccc}
+#lf_hdimg p {margin:0 0 0 15px;}
+
+.sdmenu {width: 128px;margin:0 0 0 15px;padding-bottom: 10px;color: #656565;font-size:14px;}
+.sdmenu div {overflow: hidden;}
+.sdmenu div:first-child {}
+div.sdmenu div.collapsed {height: 24px;}
+div.sdmenu div span {display: block;padding: 5px 0 5px 15px;color: #656565;background: url(../images/expanded.gif) no-repeat 0px center;cursor: pointer;}
+.sdmenu div.collapsed span {background-image: url(../images/collapsed.gif);}
+div.sdmenu div a {padding: 5px 15px;display: block;color: #656565;}
+div.sdmenu div a.current {background : #ccc;}
+div.sdmenu div a:hover {background : #f2f2f2;	color: #3e3e3e;text-decoration: none;}
+
+.task_info {width:200px;height:50px;margin:15px auto;background:#fcfcfc;border:1px solid #eaeaea}
+.textarea_box {width:578px;height:29px;
+margin:15px auto;background:#f4f4f4;border:1px solid #d1d1d1
+}
+textarea {margin:14px 15px;text-align:left;line-height:150%;padding:5px;background:#f4f4f4;border:1px solid #d1d1d1;display: block;text-align: -webkit-auto;
+}
+.textarea_box .post_sort {border-top:1px solid #d1d1d1;margin:15px 0 ;line-height:150%;padding:15px;}
+
+
+/* ----------------------滑动门-------------------*/
+.qb_tabsBox{ width:578px; margin:20px auto;overflow:hidden;}
+.qb_tabs{ height:28px;}
+.qb_tabs li{ width:86px; text-align:center; line-height:28px; float:left; background:#d6d6d6; margin-right:5px; list-style:none; position:relative; cursor:pointer; color:#4e4e4e;}
+.qb_tabs li span{ display:none;}
+.qb_tabs .cur{ background-color:#f0f0f0;}
+.qb_tabs .cur span{ display:block; width:1px; height:1px; border:solid 8px; border-color:#f0f0f0 #fff #fff #fff; position:absolute; top:20px; left:32px; overflow:hidden; z-index:-1;}
+.qb_cons{ height:auto; padding:8px 12px; border:1px solid #f0f0f0; position:relative; z-index:1;}
+.qb_cons ul li{ list-style:none; line-height:24px;}
+.qb_hidden{ display:none;}
+.qb_block{ display:block;}
+
+
+/* ----------------------内容列表------------------*/
+.user_face {float:left;width:62px;margin:10px;}
+.user_face img {width:60px;height:60px;border:1px solid #d1d1d1;}
+.main_info {font-size:12px;line-height:200%;color:#4e4e4e;}
+.main_info img {margin:15px;width:160px;height:160px;border:1px solid #d1d1d1;}
+.fensi { margin:25px 15px;}
+.fensi  img {border:1px solid #d1d1d1;}
+.attend  { margin:25px 15px;}
+.attend  img {border:1px solid #d1d1d1;margin-right:5px;}
+.attend a{width:200px;display:block;height:36px;}
+
+.cont_add {border-top: 1px solid #d1d1d1}
+.qbtable {   
+    width:100%;border-left:1px solid #d1d1d1; border-top: 1px solid #d1d1d1; border-collapse:collapse; }   
+  
+/*表头样式。*/  
+.qbtable th {   
+    color: #303030; border-right: 1px solid #d1d1d1;border-bottom: 1px solid #d1d1d1;border-top: 1px solid #d1d1d1;text-align: left; height:28px;line-height:28px;padding: 0px;background: url(/wwui-sysUI/css/images/th_bg.jpg);white-space:nowrap;text-align:center; overflow: hidden;color:#2e2e2e }   
+  
+/*单元格样式。*/  
+.qbtable td {   
+    border-right: 1px solid #d1d1d1;border-bottom: 1px solid #d1d1d1;height:24px;line-height:24px;padding:10px;color: #606060; word-break:break-all; word-wrap:break-word;white-space:normal;text-align:center}   
+  
+/*蓝色单元格样式，主要用于隔行变色。*/  
+.qbtable td.tt_left{ text-align:left;}
+.qbtable tr.a1{ background:#fafafa;}
+/*表格中超级链接样式。*/  
+.qbtable td a:link{   
+    font-weight:400 ;color:#4e4e4e ; text-decoration:none  ;word-break:break-all;word-wrap:break-word;white-space:normal;}   
+  
+.qbtable td a:visited {   
+    font-weight:400 ;color:#4e4e4e ;text-decoration:none  ;word-break:break-all;word-wrap:break-word;white-space:normal;}   
+  
+.qbtable td a:hover {   
+    font-weight:400 ;text-decoration:underline ; color: #51b006;word-break:break-all; word-wrap:break-word; white-space:normal; }   
+  
+.qbtable td a:active {   
+    font-weight:400 ;text-decoration:none; color:#51b006;word-break:break-all;word-wrap:break-word;white-space:normal;} 
+
+.orange {color:#ed7017}
+.left_info {float:left;color:#4c4c4c;margin:0 0 0 98px;}
+.right_info {float:right;color:#4c4c4c}
+.usname {font-size:14px;font-weight:bold;color:#258033;margin:0 10px;}
+.jindou {margin:15px;}
+.divhr {width:578px;height:1px;margin:10px 0;font-size:1px;border-top:1px solid #d1d1d1;}
+hr {color:#fff;border-top:1px solid #d1d1d1;margin:0 0 5px 0;}
+
+.textarea {background:#ffffff;border:1px solid #dedede;margin:0;}
+.textbox {height:20px;border:1px solid #dedede;line-height:20px;}
+
+/* zw's css */
+.errorlist {
+    font-size: 12px !important;
+    color: red;
+}
+
+table td.noborder {
+ border: 0;
+ text-align: left;
+}
+
+.cover {
+    width: 180px;
+    height: 240px;
+    border: 2px solid #DDDDDD;
+}
+
+#progressbar {
+    width: 31%;
+    height: 14px;
+    display: none;
+    border: 1px solid #aaa;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.ui-progressbar-value {
+    text-align: center;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 14px;
+}

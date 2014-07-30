@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title>电子书包管理系统 | {% block title %}{% endblock %}</title>
+    <link rel='stylesheet' href='{{ STATIC_URL }}style.css' type='text/css'/>
+    <!--[if !IE 7]>
+	  <style type="text/css">
+		#container {display:table;height:100%}
+	  </style>
+    <![endif]-->
+    {% block external %}{% endblock %}
+  </head>
+  <body>
+    <!-- {% load myfilter %} -->
+    <div id="container">
+      <div class="head">
+        <div class="head_center c">
+          <div class="logo l"><img src="{{ STATIC_URL }}images/title_bar.png" title="电子书包管理系统" width="540" height="60" /></div>
+          <div class="info r">
+            <span>[{{ user.username }}]</span> <a href="/logout/">注销</a>
+            <br>
+            <table cellspacing=0>
+              <tr>
+                <td align="right">
+                  <div class="nav1">
+                    <a href="/">主页</a>
+                  </div>
+                </td>
+                <!-- {% if user|user_has_perm:"change_courseware" %} -->
+                <!-- <td> -->
+                <!--   <div class="nav2"> -->
+                <!--     <a href="/courses/">课件管理</a> -->
+                <!--   </div> -->
+                <!-- </td> -->
+                <!-- {% endif %} -->
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>      
+      <div id="wrapper">
+        {% block head %}{% endblock %}
+        <div id="main">
+          {% block content %}{% endblock %}
+        </div>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer c">Copyright &copy; 2013 教育云平台课件管理系统 All Rights Reserved.</div>
+    </div>
+  </body>
+</html>

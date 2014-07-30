@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %} 班级管理 {% endblock %}
+
+{% block content %}
+<form method='post' action='.'> {% csrf_token %}
+  <div class=searchbar>
+    {{ form.grade }}
+    <a class='addlink' href='/class/add/{{ grade }}/'>添加班级</a>
+  </div>
+</form>
+<br>
+
+<form method='post' action='.'> {% csrf_token %}
+  <table class='list'>
+    {% for class in classes %}
+    <tr class={% cycle 'row1' 'row2' %}>
+      <td>
+        <input type='checkbox' value='{{ class.id }}' name='selected'>
+      </td>
+      <td><a href='/class/edit/{{ class.id }}/'>{{ class.name }}</a></td>
+      <!-- <td>{{ class.start_date }}</td> -->
+      <!-- <td>{{ class.end_date }}</td> -->
+    </tr>
+    {% endfor %}
+    <tr>
+      <td class=noborder colspan=6>
+        <input type='submit' name='delete' value='删除班级' />
+      </td>
+  </table>
+</form>  
+{% endblock %}

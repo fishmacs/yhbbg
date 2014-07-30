@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}选择用户/班级{% endblock %}
+
+{% block content %}
+<table cellspacing='10px'>
+  <tr>
+    <td>
+      <form method='post' action='.'> {% csrf_token %}
+        <div class='searchbar'>
+        <label>
+          <img alt="Search" src="{{ STATIC_URL }}images/icon_searchbox.png" style=>
+        </label>
+        {{ user_form.name }}
+        <input type='submit' name='search_user' value='搜索用户' />
+        <input type='hidden' name='classname' value='{{ classname }}' />
+        </div>
+      </form>
+    </td>
+    <td style='padding:0 40px'>
+      <form method='post' action='.'> {% csrf_token %}
+        <div class='searchbar'>
+        <label>
+          <img alt="Search" src="{{ STATIC_URL }}images/icon_searchbox.png">
+        </label>
+        {{ class_form.name }}
+        <input type='submit' name='search_class' value='搜索班级' />
+        <input type='hidden' name='username' value='{{ username }}' />
+        </div>
+      </form>
+    </td>
+    <td>
+      <form method='post' action='.'> {% csrf_token %}
+        <input type='hidden' name='next_url' value='{{ next_url }}' />
+        <a href='/message/history/'>消息历史</a>
+      </form>
+    </td>
+  </tr>
+  <form method='post' action='/inform_msg/'> {% csrf_token %}
+  <tr>
+    <td>选择用户</td>
+    <td style='padding:0 40px'>选择班级</td>
+  </tr>
+  <tr>
+    <td valign='top'>
+      <table class='list'>
+        {% for user in users %}
+        <tr class={% cycle 'row1' 'row2' %}>
+          <td>
+            <input type='checkbox' value='{{ user.id }}' name='selected_users'>
+          </td>
+          <td>{{ user.username }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </td>
+    <td valign='top' style='padding:0 40px'>
+      <table class='list'>
+        {% for class in classes %}
+        <tr class={% cycle 'row1' 'row2' %}>
+          <td>
+            <input type='checkbox' value='{{ class.id }}' name='selected_classes'>
+          </td>
+          <td>{{ class.name }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </td>
+    <td valign='top' cellspacing='40px'>
+      <input type='submit' name='cancel' value='返　回' style='margin: 0 0 40px 0' />
+      <input type='submit' name='next' value='下一步' />
+    </td>
+  </tr>
+  <input type='hidden' name='next_url' value='{{ next_url }}' />
+  </form>
+</table>
+
+{% endblock %}

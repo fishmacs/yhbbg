@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %} 课件列表 {% endblock %}
+
+{% block external %}
+<script type="text/javascript" src="{{ STATIC_URL }}jquery-1.9.1.min.js" ></script>
+<script type='text/javascript' src='{{ STATIC_URL }}courseware_state.js'></script>
+{% endblock %}
+
+{% load myfilter %}
+
+{% block content %}
+<div class=searchbar>
+  <label>课程: {{ grade|grade_name }}{{ course.course_name }}</label>
+  <img src="{{ STATIC_URL }}images/icon_add.jpg" style='padding: 0 0 0 240px'>
+  <a href='/courseware/detail/0/?grade={{ grade }}&course_id={{ course.id }}&course_name={{ course.course_name|iriencode }}'>添加课件</a>
+</div>
+<img class=cover src='{{ course.get_image_url }}'></img>
+{% if not coursewares %}
+ <div class=searchbar>
+   <label>暂时没有课件</label>
+ </div>
+{% else %}
+<form method='post' action='.'> {% csrf_token %}
+  <table class='list'>
+    {% for courseware in coursewares %}
+    <tr class={% cycle 'row1' 'row2' %}>
+      <td>
+        <input id='id_courseware_{{ forloop.counter0 }}' type='checkbox'
+               value='{{ courseware.id }}' name='{{ selected }}'>
+      </td>
+      <td>{{ courseware.category.name_ch }}</td>
+      <td>
+        <a href='/courseware/detail/{{ courseware.id }}'>
+          {{ courseware.name }}
+        </a>
+      </td>
+      <td id='courseware_state{{ courseware.id }}'>{{ courseware.state_str }}</td>
+      <td>
+      {% with action=courseware.next_action %}
+        {% if action.0 %}
+          <a href='{{ action.1 }}'>{{ action.0 }}</a>
+        {% else %}
+          {% if action.1 %}
+            <img width=24px height=24px src={{ action.1 }}></img>
+          {% endif %}
+        {% endif %}
+      {% endwith %}
+      </td>
+    </tr>
+  {% endfor %}
+    <tr>
+      <td class=noborder colspan=5>
+        <input type='submit' name='delete' value='删除课件' />
+      </td>
+    </tr>
+  </table>
+</form>
+{% endif %}
+{% endblock %}

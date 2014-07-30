@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block external %}
+<link rel="stylesheet" href="{{ STATIC_URL }}showvote.css" type="text/css">
+<script type="text/javascript" src="{{ STATIC_URL }}jquery.min.js" ></script>
+<script src="{{ STATIC_URL }}jquery.flot.hack3d.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}jquery.flot.stack.js" type="text/javascript" ></script>
+<script src="{{ STATIC_URL }}jquery.flot.valuelabels.js" type="text/javascript" ></script>
+<script src="{{ STATIC_URL }}stomp.min.js" type="text/javascript"></script>
+<!-- <script type="text/javascript"> -->
+<!--   var choices = {{ choices|safe }}; -->
+<!-- </script> -->
+<script type="text/javascript" src="{{ STATIC_URL }}showvote.js"></script>
+{% endblock %}
+
+{% block title %} 投票结果 {% endblock %}
+
+{% block content %}
+<a href="/vote/list/{{ course_id }}/">投票管理</a> > 查看结果
+<div style="width:800px; margin:auto auto 20px auto;">
+  <table cellspacing="20px">
+    <tr>
+      <td><font color="blue">标题:</font></td>
+      <td>{{ vote.title }}</td>
+    </tr>
+  </table>
+  <table cellspacing="20px">
+    <tr>
+      <td><font color="blue">类型:</font></td>
+      <td>{{ vote.get_kind }}</td>
+      <td></td><td></td>
+      <td><font color="blue">投票人数:</font></td>
+      <td id="voter_count">{{ voter_count }}</td>
+      <td></td><td></td>
+      <td><font color="blue">状态:</font></td>
+      <td>{{ vote.get_status }}</td>
+    </tr>
+  </table>
+</div>
+<div id="placeholder"></div>
+<script type="text/javascript">
+  prepare('{{ vote.id }}', '{{ vote_data|safe }}', {% if vote.finished %}true{% else %}false {% endif %});
+</script>
+{% endblock %}

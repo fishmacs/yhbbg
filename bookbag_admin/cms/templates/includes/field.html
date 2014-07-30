@@ -1,0 +1,25 @@
+{% if field.errors %}
+  <tr>
+    <td>
+      {{ field.errors }}
+    </td>
+  </tr>
+{% endif %}
+  {% if not field.is_hidden %}
+  <tr>
+  {% if field.is_checkbox %}
+    {{ field }}{{ field.label_tag }}
+  {% else %}
+  <td>
+  {{ field.label_tag }}:
+  </td>
+  <td>
+    {% if field.is_readonly %}
+      <p>{{ field.contents }}</p>
+    {% else %}
+      {{ field }}
+    {% endif %}
+  {% endif %}
+  </td>
+  </tr>
+  {% endif %}

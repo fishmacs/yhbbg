@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}导入用户{% endblock %}
+
+{% block content %}
+{% if usertype == 'teacher' %}
+<a href="/teacher/list/">教师管理</a>
+{% else %}
+<a href="/student/list/">学生管理</a>
+{% endif %}
+> {% if type == 'delete' %}批量删除{% else %}导入用户{% endif %}
+<br><br>
+<form method='post' action='.' enctype='multipart/form-data'> {% csrf_token %}
+  <div style='margin-left: 10px'>
+    {{ form.file.errors }}
+    {{ form.file.label_tag }}:
+    {{ form.file }}
+    <input type='submit' name='upload' value='上传' />
+    <br><br>
+    <font color='blue'>说明：用户数据文件格式是逗号分隔的csv文件，字段说明如下：</font>
+    <p><font color='red'><i>
+    {% if usertype == 'teacher' %}
+    {% else %}
+      班级, 用户id, 密码, 重复密码, 学生姓名, 性别<font color=black>(男,女,M,F)</font>, 出生日期<font color=black>(xxxx-xx-xx</font>), 住址
+    {% endif %}
+    </i></font></p>
+  </div>
+</form>
+{% if errors %}
+  <br>
+  <ul class='errorlist' style='margin-left: 20px'>
+    {% for err in errors %}
+    <li>{{ err }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+<br>
+<a style='margin-left: 10px' href='{{ STATIC_URL }}test_gbk.csv'>数据文件样本下载</a>
+{% endblock %}

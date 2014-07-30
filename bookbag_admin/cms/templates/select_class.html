@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}班级选择{% endblock %}
+
+{% block content %}
+<form method='post' action='.'> {% csrf_token %}
+  {% for class in all_classes %}
+    <input type='checkbox' name='selected' value='{{ class.id }}' {% if class.id in selected_ids %} checked='1' {% endif %}>{{ class.name }}
+  {% endfor %}
+  <br><br>
+  <input type='submit' name='submit' value='确定' class='user_change' />
+  <input type='submit' name='cancel' value='取消' class='user_change' />
+  <input type='hidden' name='next' value='{{ next_url }}' />
+</form>
+
+{% endblock%}

@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+
+{% block title %} 管理员 {% endblock %}
+{% block external %}
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("body").css("background-color", "#EEE");
+  });
+</script>
+{% endblock %}
+
+{% block head %}
+{% load myfilter %}
+<div class="banner">
+  <div class="banner_img"></div>
+</div>
+
+<div class="contents">
+  <div class="main c">
+    <ul>
+      {% if user|user_has_perm:"change_region" %}
+      <li onmouseover="style.backgroundImage='url({{ STATIC_URL }}images/mouse_over.jpg)'" onmouseout="style.backgroundImage='url()'">
+        <div class="imgs">
+          <a href="/region/list/"><img src="{{ STATIC_URL }}images/icon_region.png" width="48" height="48" /></a>
+        </div>
+        <h3><a href="/region/list/">区域管理</a></h3>
+        <span>添加/修改/删除使用电子课件系统的区域。</span>
+      </li>
+      {% endif %}
+      {% if user|user_has_perm:"change_school" %}
+      <li onmouseover="style.backgroundImage='url({{ STATIC_URL }}images/mouse_over.jpg)'" onmouseout="style.backgroundImage='url()'">
+        <div class="imgs">
+          <a href="/school/list/{{ region }}"><img src="{{ STATIC_URL }}images/icon_school.png" width="48" height="48" /></a>
+        </div>
+        <h3><a href="/school/list/{{ region }}">学校管理</a></h3>
+        <span>添加/修改/删除管辖区域内的学校。</span>
+      </li>
+      {% endif %}
+      {% if user|user_has_perm:"auth.change_sysadmin auth.change_regionadmin auth.change_schooladmin" %}
+      <li onmouseover="style.backgroundImage='url({{ STATIC_URL }}images/mouse_over.jpg)'" onmouseout="style.backgroundImage='url()'">
+        <div class="imgs">
+          <a href="/admin/list/"><img src="{{ STATIC_URL }}images/icon_admin.png" width="48" height="48" /></a>
+        </div>
+        <h3><a href="/admin/list/">管理员列表</a></h3>
+        <span>添加/修改/删除管理员。</span>
+      </li>
+      {% endif %}
+      {% if user|user_has_perm:"change_semester" %}
+      <li onmouseover="style.backgroundImage='url({{ STATIC_URL }}images/mouse_over.jpg)'" onmouseout="style.backgroundImage='url()'">
+        <div class="imgs">
+          <a href="/semester/list/"><img src="{{ STATIC_URL }}images/icon_semester.png" width="48" height="48" /></a>
+        </div>
+        <h3><a href="/semester/list/">学期设置</a></h3>
+        <span>设置新学期开始/结束时间</span>
+      </li>
+      {% endif %}
+      {% if user|user_has_perm:"change_course" %}
+      <li onmouseover="style.backgroundImage='url({{ STATIC_URL }}images/mouse_over.jpg)'" onmouseout="style.backgroundImage='url()'">
+        <div class="imgs">
+          <a href="/course/list/"><img src="{{ STATIC_URL }}images/icon_course.png" width="48" height="48" /></a>
+        </div>
+        <h3><a href="/course/list/">课程管理</a></h3><span>增加、删除、修改课程，为课程关联相关班级。</span>
+      </li>
+      {% endif %}
+      {% if user|user_has_perm:"change_schoolclass" %}
+      <li onmouseover="style.backgroundImage='url({{ STATIC_URL }}images/mouse_over.jpg)'" onmouseout="style.backgroundImage='url()'">
+        <div class="imgs">
+          <a href="/class/list/0/"><img src="{{ STATIC_URL }}images/icon_class.png" width="48" height="48" /></a>
+        </div>
+        <h3><a href="/class/list/0/">班级管理</a></h3><span>增加、删除、修改班级。</span>
+      </li>
+      {% endif %}
+      {% if user|user_has_perm:"auth.change_teacher" %}
+      <li onmouseover="style.backgroundImage='url({{ STATIC_URL }}images/mouse_over.jpg)'" onmouseout="style.backgroundImage='url()'">
+        <div class="imgs">
+          <a href="/teacher/list/"><img src="{{ STATIC_URL }}images/icon_teacher.png" width="48" height="48" /></a>
+        </div>
+        <h3><a href="/teacher/list/">教师管理</a></h3><span>管理学校的老师帐号；解除设备绑定；选择任课班级/课程等。</span>
+      </li>
+      {% endif %}
+      {% if user|user_has_perm:"auth.change_student" %}
+      <li onmouseover="style.backgroundImage='url({{ STATIC_URL }}images/mouse_over.jpg)'" onmouseout="style.backgroundImage='url()'">
+        <div class="imgs">
+          <a href="/student/list/"><img src="{{ STATIC_URL }}images/icon_student.png" width="48" height="48" /></a>
+        </div>
+        <h3><a href="/student/list/">学生管理</a></h3><span>管理学校的学生帐号；解除设备绑定。</span>
+      </li>
+      {% endif %}
+      {% if user|user_has_perm:"change_courseware" %}
+      <li onmouseover="style.backgroundImage='url({{ STATIC_URL }}images/mouse_over.jpg)'" onmouseout="style.backgroundImage='url()'">
+        <div class="imgs">
+          <a href="/courses/"><img src="{{ STATIC_URL }}images/icon_courseware.png" width="48" height="48" /></a>
+        </div>
+        <h3><a href="/courses/">课件管理</a></h3><span>上传、删除、修改课件，格式转换和分发等操作。</span>
+      </li>
+      {% endif %}
+      {% if user|user_has_perm:"change_courseware" %}
+      <li onmouseover="style.backgroundImage='url({{ STATIC_URL }}images/mouse_over.jpg)'" onmouseout="style.backgroundImage='url()'">
+        <div class="imgs">
+          <a href="/vote/course/list/"><img src="{{ STATIC_URL }}images/icon_courseware.png" width="48" height="48" /></a>
+        </div>
+        <h3><a href="/vote/course/list/">投票管理</a></h3><span>创建，修改投票，查看投票结果。</span>
+      </li>
+      {% endif %}
+      {% if user|user_has_perm:"change_informmessage" %}
+      <li onmouseover="style.backgroundImage='url({{ STATIC_URL }}images/mouse_over.jpg)'" onmouseout="style.backgroundImage='url()'">
+        <div class="imgs">
+          <a href="/inform_select/0/"><img src="{{ STATIC_URL }}images/icon_message.png" width="48" height="48" /></a>
+        </div>
+        <h3><a href="/inform_select/0/">消息/公告</a></h3><span>发布推送消息和系统公告等操作。</span>
+      </li>
+      {% endif %}
+      {% if user|user_has_perm:"change_feedback" %}
+      <li onmouseover="style.backgroundImage='url({{ STATIC_URL }}images/mouse_over.jpg)'" onmouseout="style.backgroundImage='url()'">
+        <div class="imgs">
+          <a href="/feedback/list/"><img src="{{ STATIC_URL }}images/icon_feedback.png" width="48" height="48" /></a>
+        </div>
+        <h3><a href="/feedback/list/">用户反馈</a></h3><span>查看用户反馈信息</span>
+      </li>
+      {% endif %}
+      {% if user|user_has_perm:"auth.change_sysadmin" %}
+      <li onmouseover="style.backgroundImage='url({{ STATIC_URL }}images/mouse_over.jpg)'" onmouseout="style.backgroundImage='url()'">
+        <div class="imgs">
+          <a href="/misc_config/"><img src="{{ STATIC_URL }}images/icon_misc.png" width="48" height="48" /></a>
+        </div>
+        <h3><a href="/misc_config/">其它配置</a></h3><span>修改系统配置</span>
+      </li>
+      {% endif %}
+      <li onmouseover="style.backgroundImage='url({{ STATIC_URL }}images/mouse_over.jpg)'" onmouseout="style.backgroundImage='url()'">
+        <div class="imgs">
+          <a href="/check_log/"><img src="{{ STATIC_URL }}images/icon_log.png" width="48" height="48" /></a>
+        </div>
+        <h3><a href="/check_log/">查看日志</a></h3><span>查看系统操作记录</span>
+      </li>
+    </ul>
+    <div class="fx"></div>
+  </div>
+  <div class="fx"></div>
+</div>
+{% endblock %}
+
+{% block content %}{% endblock %}

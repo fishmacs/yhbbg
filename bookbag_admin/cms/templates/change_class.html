@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}修改班级{% endblock %}
+
+{% block content %}
+<a href='/class/list/0/'>班级管理</a> > {% if class %}修改班级{% else %}添加班级{% endif %}
+{% if class %}
+<a href='/inform_select/?next_url=/class/edit/{{ class.id }}/' style='padding:0 0 0 240px'>通知更新</a>
+{% endif %}
+<form method='post' action='.' enctype='multipart/form-data'> {% csrf_token %}
+<table cellspacing='10'>
+{% for field in form %}
+{% include "includes/field.html" %}
+{% endfor %}
+<tr>
+  <td>
+  </td>
+  <td align='right'>
+    {% if class %}
+      <input type='submit' name='edit' value='修改' class='user_change' />
+      <input type='submit' name='delete' value='删除' class='user_change' />
+      <input type='hidden' name='class_id' value='{{ class.id }}' />
+    {% else %}
+      <input type='submit' name='add' value='添加' class='user_change' />
+    {% endif %}
+  </td>
+</tr>
+</table>
+</form>
+
+{% endblock%}

@@ -1,0 +1,37 @@
+{% load i18n %}
+
+<html>
+  <head>
+    <title>北邮EMBA课件 | {% block title %}{% endblock %}</title>
+    <link rel='stylesheet' href='{{ STATIC_URL }}style.css' type='text/css'/>
+    <meta name="viewport" content="width=device-width" />
+    {% block external %} {% endblock %}
+  </head>
+  <body>
+    <div class="wrapper">
+      <h1><img src="{{ STATIC_URL }}images/h1_bg.jpg" /></h1>
+      <div class="zo_body">   
+        <!-- <div id='nav'> -->
+        <!--   <a href='/'>{% trans 'course' %}</a> | -->
+        <!--   <a href='/user/'>{% trans 'user information' %}</a> -->
+<!--      <form action='/user/i18n/setlang/' method='post'> {% csrf_token %}	-->
+        <!--<input name='next' type='hidden' value='/next/page/' />-->
+        <!--
+        <select name='language'>
+          {% for lang,name in LANGUAGES %}
+            <option value='{{ lang }}' {% if lang == LANGUAGE_CODE %} selected {% endif %}>{{ name }}</option>
+          {% endfor %}
+        </select>
+        <input type='submit' value='submit'>
+        -->
+<!--        <button type='submit' name='language' value='en'>English</button>
+        <button type='submit' name='language' value='zh-cn'>中文</button>
+      </form> -->
+        <!-- </div> -->
+        <h2>{% block head %}{% endblock %}</h2>
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+    {% block other %} {% endblock %}
+  </body>
+</html>
