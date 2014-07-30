@@ -54,7 +54,7 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -64,7 +64,7 @@ SECRET_KEY = 'k3=f57-k0n@0@4#b$=@q(sns-$4vplcy^rlb2j%&amp;ur1m2-fa$='
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    #'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -77,7 +77,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'pagination.middleware.PaginationMiddleware',    
+    'pagination.middleware.PaginationMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -149,7 +149,7 @@ SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 
 AUTHENTICATION_BACKENDS = ('cms.auth.AuthBackend',)
 AUTH_PROFILE_MODULE = 'common.UserProfile'
-LOGIN_URL='/login/'
+LOGIN_URL = '/login/'
 
 FILE_UPLOAD_HANDLERS = (
     'bookbag.common.util.ProgressUploadHandler',

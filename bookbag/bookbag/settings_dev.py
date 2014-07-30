@@ -15,7 +15,7 @@ STATIC_ROOT = os.path.join(PROJECT_DIR, 'static/')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': os.path.join(PROJECT_DIR, '../bookbag.db'),                      # Or path to database file if using sqlite3.
+        'NAME': os.path.join(PROJECT_DIR, '../yuhua.sqlite'),                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -23,9 +23,9 @@ DATABASES = {
     }
 }
 
-from mongoengine import connection
+# from mongoengine import connection
 
-connection.connect('bookbag')
+# connection.connect('bookbag')
 
 CACHES = {
     'default': {

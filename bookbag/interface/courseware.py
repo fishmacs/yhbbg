@@ -334,7 +334,8 @@ def upload_yu(request):
               'week': data['lesson_count'],
               'description': '',
               'image': '',
-              'classes': [c.myclass_id for c in classes]}
+              'classes': [c.myclass_id for c in classes],
+              'volume_id': data['volume_id']}
     shutil.copy(data['path'], path)
     courseware = course_ware.create_courseware(course.id, data['grade'],
                                                user, path, others)

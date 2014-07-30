@@ -15,7 +15,7 @@ STATIC_ROOT = os.path.join(PROJECT_DIR, 'static/')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'bookbag',                      # Or path to database file if using sqlite3.
+        'NAME': 'bookbag_y',                      # Or path to database file if using sqlite3.
         'USER': 'bookbag',                      # Not used with sqlite3.
         'PASSWORD': 'teladmin',                  # Not used with sqlite3.
         'HOST': 'db',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -23,22 +23,22 @@ DATABASES = {
     }
 }
 
-from mongoengine import connection
+# from mongoengine import connection
 
-connection.connect('bookbag')
+# connection.connect('bookbag')
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211',
-        'TIMEOUT': 180
-    }
-}
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+#         'LOCATION': '127.0.0.1:11211',
+#         'TIMEOUT': 180
+#     }
+# }
 
 BASE_DOWNLOAD_URL = '/dl/getfile'
 
-COURSEWARE_UPLOAD_DIR = '/mnt/courseware_doc/upload'
-COURSEWARE_CONVERT_DIR = '/mnt/courseware_doc/output'
+COURSEWARE_UPLOAD_DIR = '/mnt/courseware_doc3/upload'
+COURSEWARE_CONVERT_DIR = '/mnt/courseware_doc3/output'
 
 DEFAULT_COURSE_IMAGE = '/media/images/courses/default.jpg'
 DEFAULT_COURSEWARE_IMAGE = '/media/images/coursewares/default.jpg'

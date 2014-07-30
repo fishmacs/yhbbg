@@ -11,33 +11,38 @@ import converter
 import global_def
 import util
 
+
 def users_can_see_courseware(courseware):
     grade = courseware.grade
     year = util.get_grade_year(grade)
-    qs = models.TeacherClassCourse.objects.filter(Q(teacher=courseware.teacher), Q(myclass__year=year), course=courseware.course_id)
+    qs = models.TeacherClassCourse.objects.filter(Q(teacher=courseware.teacher), Q(myclass__year=year),
+                                                  course=courseware.course_id)
     ### it's courseware.class_type is null, not mycalss.class_type is null
-    #Q(myclass__class_type__isnull=True)|Q(myclass__class_type=courseware.class_type), 
+    #Q(myclass__class_type__isnull=True)|Q(myclass__class_type=courseware.class_type),
     if courseware.class_type:
         qs = qs.filter(myclass__class_type=courseware.class_type)
     class_ids = [x.myclass_id for x in qs]
     return models.UserProfile.objects.filter(myclass_id__in=class_ids)
 
+    
 def create_courseware(course_id, grade, user, path, args):
     if not args['image']:
-        image = Courseware._meta.get_field('image').default #settings.DEFAULT_COURSEWARE_IMAGE.replace('/media/', '')
+        image = Courseware._meta.get_field('image').default  # settings.DEFAULT_COURSEWARE_IMAGE.replace('/media/', '')
     courseware = Courseware.objects.create(
-        name=args['title'], 
-        grade=grade, #int(args['grade']),
+        name=args['title'],
+        grade=grade,  # int(args['grade']),
         book_provider_id=int(args['provider']),
         category_id=int(args['category']),
         share_level=int(args['share']),
-        week = int(args['week']),
+        week=int(args['week']),
+        volume_id=args['volume_id'],
         description=args['description'],
-        image=image, #password=args['password'],
-        state=global_def.COURSEWARE_STATE_WAITING, 
+        image=image,  # password=args['password'],
+        state=global_def.COURSEWARE_STATE_WAITING,
         path=path, course_id=course_id, teacher=user)
     courseware.classes.add(*args['classes'])
-    return courseware 
+    return courseware
+
 
 def convert_courseware(courseware, reconvert, port):
     try:
@@ -50,6 +55,7 @@ def convert_courseware(courseware, reconvert, port):
         courseware.state = global_def.COURSEWARE_STATE_CONVERT_ERROR
         courseware.errmsg = str(e)[:80]
     courseware.save()
+
 
 class DeliverThread(Thread):
     def __init__(self, courseware):
@@ -94,6 +100,7 @@ class DeliverThread(Thread):
         #=======================================================================
         # push_update_messages(push_dict)
         #=======================================================================
+
         
 def deliver_courseware(courseware):
     courseware.state = global_def.COURSEWARE_STATE_DELIVERING
@@ -101,10 +108,12 @@ def deliver_courseware(courseware):
     task = DeliverThread(courseware)
     task.start()
 
+
 def undeliver_courseware(courseware):
     courseware.state = global_def.COURSEWARE_STATE_CONVERTED
     courseware.save()
     delete_delivered(courseware)
+
     
 def deliver_user_courseware(user, courseware):
     print user.user_id, user.device_id
@@ -131,6 +140,7 @@ def deliver_user_courseware(user, courseware):
             print >>sys.stderr, 'deliver failed: ', e
     return None
 
+
 def convert_finish(courseware_id, errmsg):
     courseware = Courseware.objects.get(pk=courseware_id)
     courseware.state = not errmsg and global_def.COURSEWARE_STATE_CONVERTED or global_def.COURSEWARE_STATE_CONVERT_ERROR
@@ -143,6 +153,7 @@ def convert_finish(courseware_id, errmsg):
 #     if not errmsg:
 #         finished = UserCourseware.objects.create(
 #             user=user, raw=courseware, url=path)
+
     
 def coursewares_of_course(course_id, grade, user=None):
     coursewares = Courseware.objects.select_related('category').filter(course=course_id, grade=grade)
@@ -159,6 +170,7 @@ def coursewares_of_course(course_id, grade, user=None):
 #         finally:
 #             course.delete()
 
+
 def delete_courseware(courseware):
     delete_delivered(courseware)
     try:
@@ -169,6 +181,7 @@ def delete_courseware(courseware):
     finally:
         courseware.delete()
 
+
 def delete_delivered(raw):
     for course in UserCourseware.objects.filter(raw=raw):
         try:
@@ -177,6 +190,7 @@ def delete_delivered(raw):
         except OSError:
             pass
         course.delete()
+
 
 def get_already_delivered(courseware, user):
     try:

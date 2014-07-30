@@ -4,6 +4,7 @@ from common import models, global_def as common_def
 import db_util
 import util
 
+
 def slice_courseware(courseware):
     #catname, catname_en = db_util.get_category_names(courseware.category_id)
     return {
@@ -16,10 +17,11 @@ def slice_courseware(courseware):
         'category_name_en': courseware.category.name_en,
         'grade_id': courseware.grade,
         'grade_name': common_def.get_grade_display(courseware.grade),
+        'volume_id': courseware.volume_id,
         'name': courseware.name,
         'name_en': '',
         'course_id': courseware.course.id,
-        'course_name': courseware.course.course_name, #courseware.get_course_name(),
+        'course_name': courseware.course.course_name,  # courseware.get_course_name(),
         'course_name_en': courseware.course.english_name,
         'image': courseware.get_image_url(),
         'description': courseware.description,
@@ -29,8 +31,9 @@ def slice_courseware(courseware):
         'downloaded': courseware.downloaded,
         'teacher': courseware.teacher.first_name,
         'upload_time': courseware.modified_time.strftime('%Y-%m-%d %H:%M:%S')
-        }
+    }
 
+    
 def json_from_courseware(coursewares):
     d = {}
     for courseware in coursewares:
@@ -42,13 +45,15 @@ def json_from_courseware(coursewares):
             d1[courseware.category_id] = l
         l.append(slice_courseware(courseware))
     return json.dumps(d, ensure_ascii=False)
-        
+
+    
 def json_from_courseware1(coursewares):
     d = []
     for courseware in coursewares:
         d.append(slice_courseware1(courseware))
     return json.dumps(d, ensure_ascii=False)
 
+    
 def slice_courseware1(courseware):
     #catname, catname_en = db_util.get_category_names(courseware.category_id)
     return {
@@ -61,6 +66,7 @@ def slice_courseware1(courseware):
         'category_name_en': courseware.category.name_en,
         'grade_id': courseware.grade,
         'grade_name': common_def.get_grade_display(courseware.grade),
+        'volume_id': courseware.volume_id,
         'name': courseware.name,
         'name_en': '',
         'image': '/dl/image/courseware/%d/' % courseware.id,
@@ -71,8 +77,9 @@ def slice_courseware1(courseware):
         'downloaded': courseware.downloaded,
         'teacher': courseware.teacher.first_name,
         'upload_time': courseware.modified_time.strftime('%Y-%m-%d %H:%M:%S')
-        }
+    }
 
+    
 def slice_course(course):
     return {
         'id': course.id,
@@ -80,8 +87,9 @@ def slice_course(course):
         'english_name': course.english_name,
         'image': '/dl/image/course/%d/' % course.id,
         'description': course.description,
-        }
+    }
 
+    
 def json_from_course(courses):
     l_courses = []
     for course in courses:
@@ -89,14 +97,15 @@ def json_from_course(courses):
         l_courses.append(d_course)
         coursewares = {}
         newwares = {}
-        for k,v in course.coursewares.iteritems():
+        for k, v in course.coursewares.iteritems():
             coursewares[k] = [slice_courseware1(cw) for cw in v]
-        for k,v in course.newwares.iteritems():
+        for k, v in course.newwares.iteritems():
             newwares[k] = v
         d_course['coursewares'] = coursewares
         d_course['newwares'] = newwares
     return json.dumps(l_courses, ensure_ascii=False)
 
+    
 def json_from_user(user):
     try:
         profile = models.UserProfile.objects.select_related('school', 'myclass').get(user=user)
@@ -109,7 +118,7 @@ def json_from_user(user):
             'age': profile.get_age(),
             'tel': profile.telphone,
             'address': profile.address
-            }
+        }
         if profile.usertype == common_def.USERTYPE_STUDENT:
             data.update({
                 'classes': [{
@@ -121,22 +130,23 @@ def json_from_user(user):
         elif profile.usertype == common_def.USERTYPE_TEACHER:
             data.update({
                 'classes': json_from_class(db_util.get_teacher_classes(user))
-                })
+            })
     except models.UserProfile.DoesNotExist:
         data = {}
     return json.dumps(data, ensure_ascii=False)
+
     
 def json_from_schedule(schedule):
     return json.dumps(schedule, ensure_ascii=False)
 
+    
 def json_from_class(classes):
     ret = []
-    for cid,year,date,name in classes:
+    for cid, year, date, name in classes:
         grade = util.calc_grade(year, date)
         ret.append({'class_id': cid,
                     'class_name': name,
                     'grade_id': grade,
-                    'grade_name': common_def.get_grade_display(grade)
-                   })
+                    'grade_name': common_def.get_grade_display(grade)})
     return ret
     

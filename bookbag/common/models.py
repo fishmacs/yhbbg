@@ -260,6 +260,7 @@ class Courseware(models.Model):
     teacher = models.ForeignKey(User)
     grade = models.SmallIntegerField()
     week = models.SmallIntegerField()
+    volume_id = models.CharField(max_length=32)
     description = models.CharField(max_length=200, default='')
     state = models.SmallIntegerField()
     path = models.CharField(max_length=128)
