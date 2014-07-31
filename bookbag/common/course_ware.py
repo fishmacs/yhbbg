@@ -35,7 +35,7 @@ def create_courseware(course_id, grade, user, path, args):
         category_id=int(args['category']),
         share_level=int(args['share']),
         week=int(args['week']),
-        volume_id=args['volume_id'],
+        volume_id=args.get('volume_id', 'V0001'),
         description=args['description'],
         image=image,  # password=args['password'],
         state=global_def.COURSEWARE_STATE_WAITING,
