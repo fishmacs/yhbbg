@@ -17,12 +17,10 @@ def get_stomp_conn():
     return stomp
 
     
-def send(des, data, daemon_channel=True):
+def send(des, data):
     stomp = get_stomp_conn()
     data = json.dumps(data)
     stomp.send(des, data)
-    if daemon_channel:
-        stomp.send(DAEMON_CHANNEL, data)
     stomp.disconnect()
     
 

@@ -79,6 +79,8 @@ class SyncDaemon(service.Service):
         try:
             func = self.cmd_handlers[cmd]
             yield func(data)
+            if 'controller' in data:
+                yield self.stomp.send(data['controller'], frame.body)
         except KeyError:
             logging.error('unknown command: ' + cmd)
 

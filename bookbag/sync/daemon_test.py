@@ -42,9 +42,10 @@ class SyncDaemonTest(TestCase):
         destination = '/topic/course__{0}_{1}'.format(self.class_id, self.course_id)
         data = {'command': 'start_sync',
                 'sync_id': self.uuid,
+                'controller': destination,
                 'destination': '/dsub/sync__{0}'.format(self.uuid),
                 'message_queue': settings.MESSAGE_QUEUE}
-        msgq.send(destination, data)
+        msgq.send(msgq.DAEMON_CHANNEL, data)
         
     def end_sync(self):
         sync = models.LessonSync.objects.get(uuid=self.uuid)
@@ -54,9 +55,10 @@ class SyncDaemonTest(TestCase):
         destination = '/topic/course__{0}_{1}'.format(sync.myclass_id, sync.course_id)
         data = {'command': 'end_sync',
                 'sync_id': self.uuid,
+                'controller': destination,
                 'destination': '/dsub/sync__{0}'.format(self.uuid),
                 'message_queue': settings.MESSAGE_QUEUE}
-        msgq.send(destination, data)
+        msgq.send(msgq.DAEMON_CHANNEL, data)
 
     def test_start_end(self):
         self.start_sync()
@@ -72,21 +74,21 @@ class SyncDaemonTest(TestCase):
         time.sleep(0.1)
         data = {'type': 'test', 'action': 'action',
                 'target': 'target', 'option': 'option'}
-        msgq.send('/dsub/sync__' + self.uuid, data, False)
+        msgq.send('/dsub/sync__' + self.uuid, data)
         time.sleep(2)
         self.end_sync()
         
     def test_sync_hearbeat1(self):
         self.start_sync()
         data = {'sync_id': self.uuid, 'type': 'heartbeat'}
-        msgq.send('/queue/sync__{0}__heartbeat'.format(self.uuid), data, False)
+        msgq.send('/queue/sync__{0}__heartbeat'.format(self.uuid), data)
         time.sleep(2)
         self.end_sync()
 
     def test_sync_hearbeat2(self):
         self.start_sync()
         data = {'sync_id': self.uuid, 'type': 'heartbeat'}
-        msgq.send('/queue/sync__{0}__heartbeat'.format(self.uuid), data, False)
+        msgq.send('/queue/sync__{0}__heartbeat'.format(self.uuid), data)
         time.sleep(20)
         s = models.LessonSync.objects.get(uuid=self.uuid)
         self.assertEqual(s.finished, True)
