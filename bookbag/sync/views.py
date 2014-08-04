@@ -63,9 +63,10 @@ def sync_start(request, class_id, course_id):
     destination = '/topic/course__{0}_{1}'.format(class_id, course_id)
     data = {'command': 'start_sync',
             'sync_id': id,
+            'controller': destination,
             'destination': '/dsub/sync__{0}'.format(id),
             'message_queue': settings.MESSAGE_QUEUE}
-    msgq.send(destination, data)
+    msgq.send(msgq.DAEMON_CHANNEL, data)
     #msgq.subscribe_sync(id)
     return data
 
@@ -80,6 +81,7 @@ def sync_end(request, id):
     destination = '/topic/course__{0}_{1}'.format(sync.myclass_id, sync.course_id)
     data = {'command': 'end_sync',
             'sync_id': id,
+            'controller': destination,
             'destination': '/dsub/sync__{0}'.format(id),
             'message_queue': settings.MESSAGE_QUEUE}
-    msgq.send(destination, data)
+    msgq.send(msgq.DAEMON_CHANNEL, data)
