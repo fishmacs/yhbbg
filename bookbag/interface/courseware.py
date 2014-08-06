@@ -353,8 +353,10 @@ def upload_yu(request):
               ('password', ''),
               ('type', 'mrf')]
     _set_backurl(str(courseware.id), data['backurl'])
-    return HttpResponse('https://k12.telecomedu.com/dl/getfile/?' + '&'.join(
-        ['='.join([k, v]) for (k, v,) in params]))
+    url = 'https://k12.telecomedu.com/dl/getfile/?' + '&'.join(
+        ['='.join([k, v]) for (k, v,) in params])
+    s = json.dumps({'url': url, 'bookid': str(courseware.id)}, ensure_ascii=False)
+    return HttpResponse(s)
 
 
 def _get_backurl(courseware_id):
