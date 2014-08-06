@@ -53,6 +53,9 @@ def encrypt(infile, key, outfile):
 def deliver_file(id, uid, path, crypt_key):
     filename = os.path.basename(path)
     dirname = os.path.dirname(path)
-    outpath = os.path.join(dirname, str(uid), filename)
+    outdir = os.path.join(dirname, str(uid))
+    if not os.path.exists(outdir):
+        os.makedirs(outdir)
+    outpath = os.path.join(outdir, filename)
     encrypt(path, crypt_key, outpath)
     return outpath
