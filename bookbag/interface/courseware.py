@@ -316,7 +316,7 @@ def upload_progress(request, upload_id):
 def upload_yu(request):
     data = json.loads(request.REQUEST['data'])
     course = models.Course.objects.get(course_name=data['course'])
-    user = User.objects.get(username=data['username'])
+    user = User.objects.get(username='18919312225')  # data['username'])
     try:
         category = models.CoursewareCategory.objects.get(name_ch=data['category'])
         category = category.id
