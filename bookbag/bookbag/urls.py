@@ -1,6 +1,6 @@
 #encoding=utf-8
 
-from django.conf.urls.defaults import patterns
+from django.conf.urls.defaults import patterns, include
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf import settings
 
@@ -122,6 +122,8 @@ urlpatterns = patterns(
 
     # upload interface for YuChengwu
     (r'^interface/courseware/upload/$', cv.upload_yu),
+
+    (r'^testing/', include('testing.urls')),
 )
 
 urlpatterns += staticfiles_urlpatterns()
