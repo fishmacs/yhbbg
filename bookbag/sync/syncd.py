@@ -107,18 +107,23 @@ class SyncDaemon(service.Service):
             logging.warn('unknown sync id: ' + id)
 
     def finish_sync(self, dead_ids):
+        logging.info('start finish_sync: %s', dead_ids)
         models.LessonSync.objects.filter(uuid__in=dead_ids).update(finished=True)
+        logging.info('finish_sync ok')
         
     def timer_consumer(self):
-        logging.debug('timer')
         dead_ids = []
         now = timezone.now()
         for id, t in self.sync_dict.iteritems():
+            logging.info('test time')
             if now - t > timedelta(seconds=self.SYNC_TIMEOUT):
                 self.unsubscribe('sync__' + id)
                 dead_ids.append(id)
+            logging.info('test time ok')
         for id in dead_ids:
+            logging.info('remove dead sync %s', id)
             del self.sync_dict[id]
+            logging.info('remove ok')
         if dead_ids:
             reactor.callInThread(self.finish_sync, dead_ids)
             

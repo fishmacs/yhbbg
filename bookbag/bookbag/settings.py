@@ -106,6 +106,7 @@ INSTALLED_APPS = (
     'ask',
     'interface',
     'sync',
+    'testing',
     #'tastypie',
 )
 

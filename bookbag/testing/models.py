@@ -1,6 +1,6 @@
 from django.db import models
 
-from common.modles import Courseware
+from common.models import Courseware
 
 
 class Test(models.Model):
@@ -20,6 +20,9 @@ class Test(models.Model):
     def has_answer(self):
         return self.is_selection() or self.type == 'fk'
 
-    
+    def get_answer(self):
+        return self.answer
 
-    
+    def get_type(self):
+        return self.type
+        
