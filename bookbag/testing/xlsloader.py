@@ -88,7 +88,7 @@ def load(filename, cid):
     wb = xlrd.open_workbook(filename)
     sheet = wb.sheets()[0]
     i = 1
-    for i in xrange(sheet.nrows):
+    for i in xrange(1, sheet.nrows):
         try:
             section, title, type, num, answer = read_row(sheet, i)
             answer = json.dumps(answer, ensure_ascii=False)
