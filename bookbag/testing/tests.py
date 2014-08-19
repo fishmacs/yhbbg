@@ -6,7 +6,7 @@ from datetime import date
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
 
-import loader
+import xlsloader
 from common import models, global_def
 
 
@@ -53,14 +53,17 @@ class SimpleTest(TestCase):
         prepare_base()
         prepare_teacher()
         prepare_courseware()
-        self._testImport()
+        self._test_import_xls()
         self.client = Client()
         
-    def _testImport(self):
-        with open('testing/test.csv') as f:
-            loader.import_csv(f)
+    # def _test_import_csv(self):
+    #     with open('testing/test.csv') as f:
+    #         csvloader.load(f)
 
-    def testTesting(self):
+    def _test_import_xls(self):
+        xlsloader.load('testing/test.xlsx', 1)
+        
+    def test_testing(self):
         self.client.get('/zh-CN/abc/teacher1/teacher123/')
         res = self.client.get('/testing/get/1/')
         self.assertEqual(res.status_code, 200)

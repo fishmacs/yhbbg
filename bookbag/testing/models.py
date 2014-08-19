@@ -4,6 +4,14 @@ from common.models import Courseware
 
 
 class Test(models.Model):
+    TYPES = {
+        'ss': 'single choice',
+        'sm': 'multiple choice',
+        'fk': 'keyboard input',
+        'fm': 'manual input',
+        'p': 'yesno'
+    }
+    
     courseware = models.ForeignKey(Courseware)
     section = models.CharField(max_length=20)
     seq = models.SmallIntegerField()
@@ -20,9 +28,6 @@ class Test(models.Model):
     def has_answer(self):
         return self.is_selection() or self.type == 'fk'
 
-    def get_answer(self):
-        return self.answer
-
     def get_type(self):
-        return self.type
+        return self.TYPES[self.type]
         
