@@ -6,7 +6,9 @@ from datetime import date
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
 
+import loader
 import xlsloader
+from models import Test
 from common import models, global_def
 
 
@@ -53,7 +55,6 @@ class SimpleTest(TestCase):
         prepare_base()
         prepare_teacher()
         prepare_courseware()
-        self._test_import_xls()
         self.client = Client()
         
     # def _test_import_csv(self):
@@ -61,13 +62,18 @@ class SimpleTest(TestCase):
     #         csvloader.load(f)
 
     def _test_import_xls(self):
-        xlsloader.load('testing/test.xlsx', 1)
+        xlsloader.load('testing/data/test.xlsx', 1)
         
     def test_testing(self):
+        self._test_import_xls()
         self.client.get('/zh-CN/abc/teacher1/teacher123/')
         res = self.client.get('/testing/get/1/')
         self.assertEqual(res.status_code, 200)
         data = json.loads(res.content)
         print json.dumps(data['data'], indent=2, ensure_ascii=True)
 
+    def test_load(self):
+        loader.load('testing/data/courseware.xlsx')
+        self.assertEqual(models.Courseware.objects.count(), 2)
+        self.assertEqual(Test.objects.count(), 5)
         

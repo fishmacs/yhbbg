@@ -1,71 +1,97 @@
 #encoding=utf-8
 
-import csv
-import json
+import os
+import sys
+import shutil
+import xlrd
 
-from chardet.universaldetector import UniversalDetector
-
+from django.conf import settings
+from django.contrib.auth.models import User
 from django.db.transaction import commit_on_success
 
-from models import Test
+import xlsloader
+from xlsloader import get_str, get_int
+from common import course_ware
+from common.models import SchoolClass, Course, Courseware, CoursewareCategory, BookProvider
 
+sys.path.insert(1, os.path.abspath('..'))
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "bookbag.settings")
 
-def detect_encoding(f):
-    d = UniversalDetector()
-    buf = f.read(2048)
-    while(buf):
-        d.feed(buf)
-        if d.done:
-            break
-        buf = f.read(2048)
-    result = d.close()
-    # if result['confidence'] < 0.95:
-    #     return 'gb18030'
-    enc = result['encoding']
-    return enc == 'gb2312' and 'gb18030' or enc
-
-
-def decode(s, encoding):
-    try:
-        return s.decode(encoding)
-    except UnicodeDecodeError:
-        return '???'
+teachers = {}
+courses = {}
+versions = {}
+categories = {}
 
 
 @commit_on_success
-def import_csv(file):
-    #csv.field_size_limit(6)
-    encoding = detect_encoding(file)
-    #dialect = csv.Sniffer().sniff(file.read(1024))
-    file.seek(0)
-    reader = csv.reader(file)
-    i, j = 1, 1
-    curr_cid = None
-    for row in reader:
-        cid, section, title, type, num, answer = [decode(field.strip(), encoding) for field in row]
-        if answer:
-            alist = answer.split(';')
-            alist = [s.replace('%3B', '|').replace('%2C', ',') for s in alist]
+def load(filename):
+    dir = os.path.dirname(filename)
+    wb = xlrd.open_workbook(filename)
+    sheet = wb.sheets()[0]
+    i = 1
+    for i in xrange(1, sheet.nrows):
+        fields = sheet.row_values(i)
+        types = sheet.row_types(i)
+        name = get_str(fields[0], types[0])
+        version = fields[1]
+        category = fields[2]
+        grade = get_int(fields[3], types[3])
+        clss = fields[4]
+        course = fields[5]
+        user = fields[6]
+        path = os.path.join(dir, fields[7])
+        testfile = os.path.join(dir, fields[8])
+        try:
+            cwid = upload(name, version, category, grade, clss, course, user, path, testfile)
+        except Exception:
+            _, e, tb = sys.exc_info()
+            e = Exception('第 %d 行：%s' % ((i + 1), e))
+            raise e.__class__, e, tb
         else:
-            alist = []
-        if type == 'single':
-            type = 'ss'
-        elif type == 'multiple':
-            type = 'sm'
-        elif type == 'input':
-            if alist:
-                type = 'fk'
+            xlsloader.load(testfile, cwid)
+
+
+def get_model_id(model, dict, key, value, create=False):
+    try:
+        id = dict[value]
+    except KeyError:
+        try:
+            o = model.objects.get(**{key: value})
+        except model.DoesNotExist:
+            if create:
+                o = model.objects.create(**{key: value})
             else:
-                type = 'fm'
-        else:
-            raise Exception(u'第 %d 行：题目类型不正确' % i)
-        if curr_cid != cid:
-            j = 1
-            curr_cid = cid
-        else:
-            j += 1
-        answer = json.dumps(alist, ensure_ascii=False)
-        Test.objects.create(courseware_id=cid, section=section, seq=j,
-                            type=type, num=num, answer=answer)
-        i += 1
-        
+                raise Exception('指定的%s不存在!' % model)
+        id = o.id
+        dict[value] = id
+    return id
+
+
+def get_class_id(grade, name):
+    qs = SchoolClass.objects.filter(name=name)
+    for c in qs:
+        if c.get_grade() == grade:
+            return c.id
+    raise Exception('指定的班级不存在！')
+
+    
+def upload(name, version, category, grade, clss, course, username, path, testfile):
+    uid = get_model_id(User, teachers, 'username', username)
+    version_id = get_model_id(BookProvider, versions, 'name', version, True)
+    category_id = get_model_id(CoursewareCategory, categories, 'name_ch', category, True)
+    class_id = get_class_id(grade, clss)
+    course_id = get_model_id(Course, courses, 'course_name', course)
+
+    filename = os.path.basename(path)
+    despath = os.path.join(settings.COURSEWARE_UPLOAD_DIR, str(uid), str(course_id), filename)
+    shutil.copy(path, despath)
+    cw = Courseware.objects.create(
+        name=name, grade=grade, week=1, volume_id='1', path=despath,
+        course_id=course_id, teacher_id=uid, book_provider_id=version_id,
+        category_id=category_id
+    )
+    cw.classes.add(class_id)
+    if 'test' not in sys.argv:
+        course_ware.convert_courseware(cw, False, '8001')
+    return cw.id
+    
