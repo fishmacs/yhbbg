@@ -1,3 +1,5 @@
+import json
+
 from django.db import models
 
 from common.models import Courseware
@@ -30,4 +32,7 @@ class Test(models.Model):
 
     def get_type(self):
         return self.TYPES[self.type]
+
+    def get_answer(self):
+        return json.loads(self.answer)
         

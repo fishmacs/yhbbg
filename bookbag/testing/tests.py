@@ -70,10 +70,15 @@ class SimpleTest(TestCase):
         res = self.client.get('/testing/get/1/')
         self.assertEqual(res.status_code, 200)
         data = json.loads(res.content)
-        print json.dumps(data['data'], indent=2, ensure_ascii=True)
+        print json.dumps(data['data'], indent=4, ensure_ascii=True)
 
     def test_load(self):
         loader.load('testing/data/courseware.xlsx')
         self.assertEqual(models.Courseware.objects.count(), 2)
         self.assertEqual(Test.objects.count(), 5)
+
+    def test_load1(self):
+        loader.load('/Users/zw/Downloads/courseware.xlsx')
+        self.assertEqual(models.Courseware.objects.count(), 2)
+        self.assertEqual(Test.objects.count(), 23)
         

@@ -3,6 +3,7 @@
 import os
 import sys
 import shutil
+import re
 import xlrd
 
 from django.conf import settings
@@ -38,7 +39,7 @@ def load(filename):
         grade = get_int(fields[3], types[3])
         clss = fields[4]
         course = fields[5]
-        user = fields[6]
+        user = get_str(fields[6], types[6])
         path = os.path.join(dir, fields[7])
         testfile = os.path.join(dir, fields[8])
         try:
@@ -61,6 +62,7 @@ def get_model_id(model, dict, key, value, create=False):
             if create:
                 o = model.objects.create(**{key: value})
             else:
+                print key, value
                 raise Exception('指定的%s不存在!' % model)
         id = o.id
         dict[value] = id
@@ -83,8 +85,12 @@ def upload(name, version, category, grade, clss, course, username, path, testfil
     course_id = get_model_id(Course, courses, 'course_name', course)
 
     filename = os.path.basename(path)
-    despath = os.path.join(settings.COURSEWARE_UPLOAD_DIR, str(uid), str(course_id), filename)
+    desdir = os.path.join(settings.COURSEWARE_UPLOAD_DIR, str(uid), str(course_id))
+    if not os.path.exists(desdir):
+        os.makedirs(desdir)
+    despath = os.path.join(desdir, re.sub(r'\s+', '_', filename))
     shutil.copy(path, despath)
+
     cw = Courseware.objects.create(
         name=name, grade=grade, week=1, volume_id='1', path=despath,
         course_id=course_id, teacher_id=uid, book_provider_id=version_id,
@@ -94,4 +100,8 @@ def upload(name, version, category, grade, clss, course, username, path, testfil
     if 'test' not in sys.argv:
         course_ware.convert_courseware(cw, False, '8001')
     return cw.id
+
+
+if __name__ == '__main__':
+    load(sys.argv[1])
     

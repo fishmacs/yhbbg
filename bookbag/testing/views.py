@@ -18,6 +18,6 @@ def get_test(request, courseware_id):
         t1 = {'title': str(len(section) + 1),
               'type': t.get_type(),
               'num': t.num,
-              'answer': t.answer}
+              'answer': t.get_answer()}
         section.append(t1)
     return [{'title': k, 'questions': v} for k, v in sections.iteritems()]
