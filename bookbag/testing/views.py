@@ -1,5 +1,9 @@
-from collections import OrderedDict
-
+## python 2.6 does not have OrderedDict
+try:
+    from collections import OrderedDict
+except:
+    from ordereddict import OrderedDict
+    
 from django.views.decorators.cache import cache_page
 
 from models import Test
