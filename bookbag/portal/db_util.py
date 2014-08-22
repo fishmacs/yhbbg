@@ -77,7 +77,7 @@ def get_teacher_courses(user, clss):
     just_first_class = clss and clss < 0
     for c in course_refs:
         grade = c.myclass.get_grade()
-        if clss < 0:
+        if clss and clss < 0:
             clss = c.myclass.id
         if just_first_class and int(clss) != c.myclass.id:
             break

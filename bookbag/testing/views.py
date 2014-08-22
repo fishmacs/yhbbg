@@ -19,7 +19,8 @@ def get_test(request, courseware_id):
     sections = OrderedDict()
     for t in qs:
         section = sections.setdefault(t.section, [])
-        t1 = {'title': str(len(section) + 1),
+        t1 = {'id': t.id,
+              'title': str(len(section) + 1),
               'type': t.get_type(),
               'num': t.num,
               'answer': t.get_answer()}
