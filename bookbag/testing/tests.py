@@ -75,10 +75,5 @@ class SimpleTest(TestCase):
     def test_load(self):
         loader.load('testing/data/courseware.xlsx')
         self.assertEqual(models.Courseware.objects.count(), 2)
-        self.assertEqual(Test.objects.count(), 5)
-
-    def test_load1(self):
-        loader.load('/Users/zw/Downloads/courseware.xlsx')
-        self.assertEqual(models.Courseware.objects.count(), 2)
-        self.assertEqual(Test.objects.count(), 23)
+        self.assertEqual(Test.objects.count(), 143)
         

@@ -6,6 +6,10 @@ import shutil
 import re
 import xlrd
 
+# sys.path.insert(1, os.path.abspath('..'))
+# print sys.path[1:2]
+# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "bookbag.settings")
+
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db.transaction import commit_on_success
@@ -14,9 +18,6 @@ import xlsloader
 from xlsloader import get_str, get_int
 from common import course_ware
 from common.models import SchoolClass, Course, Courseware, CoursewareCategory, BookProvider
-
-sys.path.insert(1, os.path.abspath('..'))
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "bookbag.settings")
 
 teachers = {}
 courses = {}
@@ -62,7 +63,6 @@ def get_model_id(model, dict, key, value, create=False):
             if create:
                 o = model.objects.create(**{key: value})
             else:
-                print key, value
                 raise Exception('指定的%s不存在!' % model)
         id = o.id
         dict[value] = id

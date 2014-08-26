@@ -20,6 +20,9 @@ class Test(models.Model):
     type = models.CharField(max_length=2)
     num = models.SmallIntegerField()
     answer = models.CharField(max_length=256)
+    page = models.SmallIntegerField()
+    grid = models.SmallIntegerField()
+    hint = models.TextField()
     
     def is_selection(self):
         return self.type.startswith('s')
