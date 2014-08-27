@@ -79,7 +79,8 @@ def load(filename, cid):
                 section, title, type, num, answer, page, grid, hint = read_row(sheet, i)
                 section = ' '.join([sheet.name, section])
                 answer = json.dumps(answer, ensure_ascii=False)
-                Test.objects.create(courseware_id=cid, section=section, seq=i,
+                Test.objects.create(courseware_id=cid, section=section,
+                                    title=title, seq=i,
                                     type=type, num=num, answer=answer,
                                     page=page, grid=grid, hint=hint)
             except Exception as e:

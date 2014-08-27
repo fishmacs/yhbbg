@@ -1,12 +1,16 @@
+import json
+
 ## python 2.6 does not have OrderedDict
 try:
     from collections import OrderedDict
 except:
     from ordereddict import OrderedDict
-    
-from django.views.decorators.cache import cache_page
 
-from models import Test
+from django.contrib.auth.models import User
+from django.views.decorators.cache import cache_page
+from django.views.decorators.csrf import csrf_exempt
+
+from models import Test, TestResult
 from portal.decorator import authenticated_required
 from common.decorator import json_wrapper
 
@@ -17,10 +21,10 @@ from common.decorator import json_wrapper
 def get_test(request, courseware_id):
     qs = Test.objects.filter(courseware=courseware_id)
     sections = OrderedDict()
-    for t in qs:
+    for t in qs[:20]:
         section = sections.setdefault(t.section, [])
         t1 = {'id': t.id,
-              'title': str(len(section) + 1),
+              'title': t.title,  # str(len(section) + 1),
               'type': t.get_type(),
               'num': t.num,
               'answer': t.get_answer(),
@@ -29,3 +33,38 @@ def get_test(request, courseware_id):
               'hint': t.hint}
         section.append(t1)
     return [{'title': k, 'questions': v} for k, v in sections.iteritems()]
+    
+
+@authenticated_required
+@csrf_exempt
+@json_wrapper
+def put_result(request):
+    data = json.loads(request.REQUEST['result'])
+    TestResult.objects.create(
+        user=request.user, test_id=data['id'],
+        answer=data['answer'], score=data['score']
+    )
+        
+
+@authenticated_required
+@json_wrapper
+def result_list(request, courseware_id, type):
+    results = TestResult.objects.select_related('test', 'user').filter(test__courseware=courseware_id)
+    if type == 'class':
+        user = request.user
+        users = User.objects.filter(userprofile__myclass_id=user.userprofile.myclass_id)
+        results = results.filter(user__in=users).order_by('user__username')
+    else:
+        results = results.filter(user=request.user)
+    data = OrderedDict()
+    for t in results:
+        result = data.setdefault(t.user.username, {})
+        section = result.setdefault(t.test.section, [])
+        section.append({'title': t.test.title, 'score': t.score})
+    result = []
+    for username, sections in data.iteritems():
+        new_sections = []
+        for name, questions in sections.iteritems():
+            new_sections.append({'title': name, 'questions': questions})
+        result.append({'username': username, 'result': new_sections})
+    return result
