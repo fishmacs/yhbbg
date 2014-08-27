@@ -30,6 +30,19 @@ def get_int(x, t):
     raise Exception('类型不正确')
     
 
+def convert_int(a):
+    try:
+        return int(a)
+    except:
+        if len(a) == 1:
+            i = ord(a)
+            if 97 <= i <= 122:
+                return i - 96
+            elif 65 <= i <= 90:
+                return i - 64
+        raise Exception('答案格式不正确（只能为1,2,3,4或ABCD）')
+
+        
 def read_row(sheet, i):
     lst = sheet.row_values(i)
     section, title, type, num, answer, page, grid, hint = lst
@@ -48,7 +61,7 @@ def read_row(sheet, i):
         answer = answer.strip().split(',')
     elif answertype == 2:
         answer = [answer]
-
+    
     type = type.strip()
     if type == u'单选':
         type = 'ss'
@@ -66,7 +79,10 @@ def read_row(sheet, i):
         num = 2
     else:
         raise Exception('题目类型不正确')
-    
+
+    if type in ('ss', 'sm'):
+        answer = [convert_int(s) for s in answer]
+        
     return section, title, type, num, answer, page, grid, hint
     
 

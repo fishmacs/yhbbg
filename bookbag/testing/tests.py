@@ -85,8 +85,8 @@ class SimpleTest(TestCase):
         self.client.get('/zh-CN/abc/teacher1/teacher123/')
         res = self.client.get('/testing/get/1/')
         self.assertEqual(res.status_code, 200)
-        # data = json.loads(res.content)
-        # print json.dumps(data['data'], indent=4, ensure_ascii=True)
+        data = json.loads(res.content)
+        print json.dumps(data['data'], indent=4, ensure_ascii=True)
 
     def test_load(self):
         loader.load('testing/data/courseware.xlsx')
