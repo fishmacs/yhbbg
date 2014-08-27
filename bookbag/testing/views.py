@@ -1,4 +1,5 @@
 import json
+import itertools
 
 ## python 2.6 does not have OrderedDict
 try:
@@ -40,9 +41,12 @@ def get_test(request, courseware_id):
 @json_wrapper
 def put_result(request):
     data = json.loads(request.REQUEST['result'])
+    answer = data['answer']
+    t = Test.objects.get(data['id'])
+    score = _check_answer(answer, t)
     TestResult.objects.create(
-        user=request.user, test_id=data['id'],
-        answer=data['answer'], score=data['score']
+        user=request.user, test_id=t.id,
+        answer=data['answer'], score=score
     )
         
 
@@ -68,3 +72,20 @@ def result_list(request, courseware_id, type):
             new_sections.append({'title': name, 'questions': questions})
         result.append({'username': username, 'result': new_sections})
     return result
+
+
+def _check_answer(myanswer, test):
+    if test.has_answer:
+        myanswer = sorted(myanswer)
+        if test.is_fill:
+            standards = [s.split(';') for s in test.answer]
+            standards = itertools.product(*standards)
+            for x in standards:
+                if myanswer == sorted(x):
+                    return 1
+            return 0
+        else:
+            return 1 if myanswer == sorted(test.answer) else 0
+    return -1
+
+    

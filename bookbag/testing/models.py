@@ -25,15 +25,21 @@ class Test(models.Model):
     page = models.SmallIntegerField()
     grid = models.SmallIntegerField()
     hint = models.TextField()
-    
+
+    @property
     def is_selection(self):
         return self.type.startswith('s')
 
+    @property
     def is_fill(self):
         return self.type.startswith('f')
+
+    @property
+    def is_yesno(self):
+        return self.type == 'p'
         
     def has_answer(self):
-        return self.is_selection() or self.type == 'fk'
+        return self.is_selection or self.is_yesno or self.type == 'fk'
 
     def get_type(self):
         return self.TYPES[self.type]

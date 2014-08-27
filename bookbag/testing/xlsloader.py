@@ -80,7 +80,7 @@ def read_row(sheet, i):
     else:
         raise Exception('题目类型不正确')
 
-    if type in ('ss', 'sm'):
+    if type in ('ss', 'sm', 'p'):
         answer = [convert_int(s) for s in answer]
         
     return section, title, type, num, answer, page, grid, hint
