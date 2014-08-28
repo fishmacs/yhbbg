@@ -1,6 +1,7 @@
 #encoding=utf-8
 
 import json
+import itertools
 from datetime import date
 
 from django.test import TestCase, Client
@@ -78,18 +79,18 @@ class SimpleTest(TestCase):
     #         csvloader.load(f)
 
     def _test_import_xls(self):
-        xlsloader.load('testing/data/test.xlsx', 1)
+        xlsloader.load('testing/data/unit1_tests.xlsx', 1)
         
     def test_testing(self):
         self._test_import_xls()
         self.client.get('/zh-CN/abc/teacher1/teacher123/')
         res = self.client.get('/testing/get/1/')
         self.assertEqual(res.status_code, 200)
-        data = json.loads(res.content)
-        print json.dumps(data['data'], indent=4, ensure_ascii=True)
+        # data = json.loads(res.content)
+        # print json.dumps(data['data'], indent=4, ensure_ascii=True)
 
     def test_load(self):
-        loader.load('testing/data/courseware.xlsx')
+        loader.load('testing/data/unit1.xlsx')
         self.assertEqual(models.Courseware.objects.count(), 2)
         self.assertEqual(Test.objects.count(), 143)
 
@@ -98,38 +99,73 @@ class UploadTest(TestCase):
     def setUp(self):
         prepare_base()
         self.student = prepare_student()
-        prepare_courseware()
+        #prepare_courseware()
         self.client = Client()
-        xlsloader.load('testing/data/test.xlsx', 1)
+        loader.load('testing/data/test.xlsx')
 
+    def upload_one(self, data):
+        res = self.client.post('/testing/result/put/', {'result': json.dumps(data)})
+        self.assertEqual(res.status_code, 200)
+        res = json.loads(res.content)
+        self.assertEqual(res['result'], 'ok')
+        
     def upload_result(self, student):
+        # correct answers
         res = self.client.get('/zh-CN/abc/%s/student123/?mac=1' % student.username)
         self.assertEqual(res.status_code, 200)
         
-        data = {'id': 1, 'answer': [], 'score': 1}
-        res = self.client.post('/testing/result/put/', {'result': json.dumps(data)})
-        self.assertEqual(res.status_code, 200)
-        res = json.loads(res.content)
-        self.assertEqual(res['result'], 'ok')
+        self.upload_one({'id': 1, 'answer': ['scientific', 'science', 'scientist']})
+        self.upload_one({'id': 2, 'answer': ['beat']})
+        self.upload_one({'id': 3, 'answer': ['defeat']})
+        self.upload_one({'id': 4, 'answer': [2]})
+        self.upload_one({'id': 5, 'answer': [1, 2, 3]})
+        self.upload_one({'id': 6, 'answer': [0]})
+        self.upload_one({'id': 7, 'answer': []})
         
-        data = {'id': 2, 'answer': [], 'score': 0}
-        res = self.client.post('/testing/result/put/', {'result': json.dumps(data)})
+    def upload_result1(self, student):
+        # mistake answers
+        res = self.client.get('/zh-CN/abc/%s/student123/?mac=1' % student.username)
         self.assertEqual(res.status_code, 200)
-        res = json.loads(res.content)
-        self.assertEqual(res['result'], 'ok')
+        
+        self.upload_one({'id': 1, 'answer': ['scientifi', 'science', 'scientist']})
+        self.upload_one({'id': 2, 'answer': ['beet']})
+        self.upload_one({'id': 3, 'answer': ['defeet']})
+        self.upload_one({'id': 4, 'answer': [1]})
+        self.upload_one({'id': 5, 'answer': [1, 2, 4]})
+        self.upload_one({'id': 6, 'answer': [1]})
+        self.upload_one({'id': 7, 'answer': []})
         
     def test_upload_list(self):
+        # correct answers
         self.upload_result(self.student)
         res = self.client.get('/testing/result/list/1/personal/')
         self.assertEqual(res.status_code, 200)
         res = json.loads(res.content)
         data = res['data']
-        print data
-
+        result = data[0]['result']
+        questions = itertools.chain(*[r['questions'] for r in result])
+        scores = [q['score'] for q in questions]
+        self.assertEqual(scores, [1, 1, 1, 1, 1, 1, -1])
+        
         res = self.client.get('/testing/result/list/1/class/')
         self.assertEqual(res.status_code, 200)
         res = json.loads(res.content)
+        self.assertEqual(data, res['data'])
+
+    def test_upload_list1(self):
+        # mistake answers
+        self.upload_result1(self.student)
+        res = self.client.get('/testing/result/list/1/personal/')
+        self.assertEqual(res.status_code, 200)
+        res = json.loads(res.content)
         data = res['data']
-        print data
+        result = data[0]['result']
+        questions = itertools.chain(*[r['questions'] for r in result])
+        scores = [q['score'] for q in questions]
+        self.assertEqual(scores, [0, 0, 0, 0, 0, 0, -1])
         
-    
+        res = self.client.get('/testing/result/list/1/class/')
+        self.assertEqual(res.status_code, 200)
+        res = json.loads(res.content)
+        self.assertEqual(data, res['data'])
+        

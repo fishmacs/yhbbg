@@ -42,7 +42,7 @@ def get_test(request, courseware_id):
 def put_result(request):
     data = json.loads(request.REQUEST['result'])
     answer = data['answer']
-    t = Test.objects.get(data['id'])
+    t = Test.objects.get(id=data['id'])
     score = _check_answer(answer, t)
     TestResult.objects.create(
         user=request.user, test_id=t.id,
@@ -57,9 +57,9 @@ def result_list(request, courseware_id, type):
     if type == 'class':
         user = request.user
         users = User.objects.filter(userprofile__myclass_id=user.userprofile.myclass_id)
-        results = results.filter(user__in=users).order_by('user__username')
+        results = results.filter(user__in=users).order_by('user__username', 'test')
     else:
-        results = results.filter(user=request.user)
+        results = results.filter(user=request.user).order_by('test')
     data = OrderedDict()
     for t in results:
         result = data.setdefault(t.user.username, {})
@@ -76,16 +76,14 @@ def result_list(request, courseware_id, type):
 
 def _check_answer(myanswer, test):
     if test.has_answer:
-        myanswer = sorted(myanswer)
         if test.is_fill:
-            standards = [s.split(';') for s in test.answer]
+            standards = [s.split(';') for s in test.get_answer()]
             standards = itertools.product(*standards)
             for x in standards:
-                if myanswer == sorted(x):
+                if myanswer == list(x):
                     return 1
             return 0
         else:
-            return 1 if myanswer == sorted(test.answer) else 0
+            return 1 if sorted(myanswer) == sorted(test.get_answer()) else 0
     return -1
-
     

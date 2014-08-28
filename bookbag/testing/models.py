@@ -37,7 +37,8 @@ class Test(models.Model):
     @property
     def is_yesno(self):
         return self.type == 'p'
-        
+
+    @property
     def has_answer(self):
         return self.is_selection or self.is_yesno or self.type == 'fk'
 
