@@ -104,7 +104,7 @@ class UploadTest(TestCase):
         loader.load('testing/data/test.xlsx')
 
     def upload_one(self, data):
-        res = self.client.post('/testing/result/put/', {'result': json.dumps(data)})
+        res = self.client.post('/testing/result/put/', {'result': json.dumps(data, ensure_ascii=False)})
         self.assertEqual(res.status_code, 200)
         res = json.loads(res.content)
         self.assertEqual(res['result'], 'ok')
@@ -114,13 +114,15 @@ class UploadTest(TestCase):
         res = self.client.get('/zh-CN/abc/%s/student123/?mac=1' % student.username)
         self.assertEqual(res.status_code, 200)
         
-        self.upload_one({'id': 1, 'answer': ['scientific', 'science', 'scientist']})
+        self.upload_one({'id': 1, 'answer': ['science', 'scientist']})
         self.upload_one({'id': 2, 'answer': ['beat']})
         self.upload_one({'id': 3, 'answer': ['defeat']})
         self.upload_one({'id': 4, 'answer': [2]})
         self.upload_one({'id': 5, 'answer': [1, 2, 3]})
         self.upload_one({'id': 6, 'answer': [0]})
         self.upload_one({'id': 7, 'answer': []})
+        # repeat upload, confirm no new record inserted
+        self.upload_one({'id': 1, 'answer': ['scientific', 'science', 'scientist']})
         
     def upload_result1(self, student):
         # mistake answers
@@ -133,7 +135,10 @@ class UploadTest(TestCase):
         self.upload_one({'id': 4, 'answer': [1]})
         self.upload_one({'id': 5, 'answer': [1, 2, 4]})
         self.upload_one({'id': 6, 'answer': [1]})
-        self.upload_one({'id': 7, 'answer': []})
+        # skip last test
+        #self.upload_one({'id': 7, 'answer': []})
+        # repeat upload, confirm no new record inserted
+        self.upload_one({'id': 1, 'answer': ['science', 'scientist']})
         
     def test_upload_list(self):
         # correct answers
@@ -145,9 +150,9 @@ class UploadTest(TestCase):
         result = data[0]['result']
         questions = itertools.chain(*[r['questions'] for r in result])
         scores = [q['score'] for q in questions]
-        self.assertEqual(scores, [1, 1, 1, 1, 1, 1, -1])
+        self.assertEqual(scores, [1, 1, 1, 1, 1, 1, -2])
         
-        res = self.client.get('/testing/result/list/1/class/')
+        res = self.client.get('/testing/result/list/1/1/')
         self.assertEqual(res.status_code, 200)
         res = json.loads(res.content)
         self.assertEqual(data, res['data'])
@@ -159,12 +164,13 @@ class UploadTest(TestCase):
         self.assertEqual(res.status_code, 200)
         res = json.loads(res.content)
         data = res['data']
+        print json.dumps(data, ensure_ascii=False)
         result = data[0]['result']
         questions = itertools.chain(*[r['questions'] for r in result])
         scores = [q['score'] for q in questions]
         self.assertEqual(scores, [0, 0, 0, 0, 0, 0, -1])
         
-        res = self.client.get('/testing/result/list/1/class/')
+        res = self.client.get('/testing/result/list/1/1/')
         self.assertEqual(res.status_code, 200)
         res = json.loads(res.content)
         self.assertEqual(data, res['data'])

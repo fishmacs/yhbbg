@@ -9,6 +9,10 @@ from django.utils.decorators import available_attrs
 import util
 
 
+class BookbagError(ValueError):
+    pass
+
+    
 def json_wrapper(_func):
     @wraps(_func, assigned=available_attrs(_func))
     def _wrapper(*args, **kwargs):
@@ -19,7 +23,7 @@ def json_wrapper(_func):
                 'data': _func(*args, **kwargs)
             }
             return HttpResponse(util.jsondumps(data))
-        except ValueError as e:
+        except BookbagError as e:
             return HttpResponse(util.fail(e.message))
         except Exception as e:
             import traceback

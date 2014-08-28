@@ -41,30 +41,44 @@ def get_test(request, courseware_id):
 @json_wrapper
 def put_result(request):
     data = json.loads(request.REQUEST['result'])
-    answer = data['answer']
     t = Test.objects.get(id=data['id'])
+    answer = data['answer']
     score = _check_answer(answer, t)
-    TestResult.objects.create(
-        user=request.user, test_id=t.id,
-        answer=data['answer'], score=score
-    )
+    answer = json.dumps(answer, ensure_ascii=False)
+    try:
+        r = TestResult.objects.get(user=request.user, test=t)
+        r.answer = answer
+        r.score = score
+        r.save()
+    except TestResult.DoesNotExist:
+        TestResult.objects.create(
+            user=request.user, test_id=t.id,
+            answer=answer, score=score
+        )
         
 
 @authenticated_required
 @json_wrapper
-def result_list(request, courseware_id, type):
-    results = TestResult.objects.select_related('test', 'user').filter(test__courseware=courseware_id)
-    if type == 'class':
-        user = request.user
-        users = User.objects.filter(userprofile__myclass_id=user.userprofile.myclass_id)
-        results = results.filter(user__in=users).order_by('user__username', 'test')
+def result_list(request, courseware_id, class_id):
+    tests = Test.objects.filter(courseware=courseware_id)
+    results = TestResult.objects.select_related('test', 'user').filter(test__in=tests)
+    if class_id == 'personal':
+        users = [request.user]
+        results = results.filter(user=request.user)
     else:
-        results = results.filter(user=request.user).order_by('test')
+        users = User.objects.filter(userprofile__myclass_id=class_id)
+        results = results.filter(user__in=users).order_by('user__username')
+    resultdict = dict([((r.test_id, r.user_id), r) for r in results])
     data = OrderedDict()
-    for t in results:
-        result = data.setdefault(t.user.username, {})
-        section = result.setdefault(t.test.section, [])
-        section.append({'title': t.test.title, 'score': t.score})
+    for u in users:
+        result = data.setdefault(u.username, {})
+        for t in tests:
+            section = result.setdefault(t.section, [])
+            try:
+                r = resultdict[(t.id, u.id)]
+                section.append({'title': t.title, 'score': r.score, 'answer': r.get_answer()})
+            except KeyError:
+                section.append({'title': t.title, 'score': -1, 'answer': []})
     result = []
     for username, sections in data.iteritems():
         new_sections = []
@@ -85,5 +99,5 @@ def _check_answer(myanswer, test):
             return 0
         else:
             return 1 if sorted(myanswer) == sorted(test.get_answer()) else 0
-    return -1
+    return -2
     

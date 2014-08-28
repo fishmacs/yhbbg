@@ -54,3 +54,7 @@ class TestResult(models.Model):
     user = models.ForeignKey(User)
     answer = models.CharField(max_length=256)
     score = models.SmallIntegerField()
+
+    def get_answer(self):
+        return json.loads(self.answer)
+    
