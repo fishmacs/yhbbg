@@ -21,6 +21,7 @@ from django.core.servers.basehttp import FileWrapper
 from django.contrib.auth.decorators import login_required
 
 from common import models, global_def as common_def, image
+from common.decorator import json_wrapper
 from decorator import authenticated_required
 import ware_util
 import db_util
@@ -448,3 +449,49 @@ def school_code(request, school_id=None):
         schools = models.School.objects.filter(is_active=True)
         sd = [{'name': s.name, 'code': s.code} for s in schools]
     return HttpResponse(json.dumps(sd, ensure_ascii=False))
+
+
+@authenticated_required
+@json_wrapper
+def course_tree(request, course_id, class_id):
+    return {"children":
+            [
+                {"children":
+                 [
+                     {"children":[],"id":11,"name":"Period 1 Warming Up,Pre-reading & Reading"},
+                     {"children":[],"id":12,"name":"Period 2 Learning about Language & Using Language"},
+                     {"children":[],"id":13,"name":"Period 3 Grammar"},
+                 ],
+                 "id":10,"name":"Unit 1 Great scientists"},
+                {"children":
+                 [
+                     {"children":[],"id":21,"name":"Period 1 Warming Up,Pre-reading & Reading"},
+                     {"children":[],"id":22,"name":"Period 2 Learning about Language & Using Language"},
+                     {"children":[],"id":23,"name":"Period 3 Grammar"},
+                 ],
+                  "id":20,"name":"Unit 2 The United Kingdom"},
+                {"children":
+                 [
+                     {"children":[],"id":31,"name":"Period 1 Warming Up,Pre-reading & Reading"},
+                     {"children":[],"id":32,"name":"Period 2 Learning about Language & Using Language"},
+                     {"children":[],"id":33,"name":"Period 3 Grammar"},
+                 ],
+                  "id":30,"name":"Unit 3 Lift in the future"},
+                {"children":
+                 [
+                     {"children":[],"id":41,"name":"Period 1 Warming Up,Pre-reading & Reading"},
+                     {"children":[],"id":42,"name":"Period 2 Learning about Language & Using Language"},
+                     {"children":[],"id":43,"name":"Period 3 Grammar"},
+                 ],
+                 "id":40,"name":"Unit 4 Marking the news"},
+                {"children":
+                 [
+                     {"children":[],"id":51,"name":"Period 1 Warming Up,Pre-reading & Reading"},
+                     {"children":[],"id":52,"name":"Period 2 Learning about Language & Using Language"},
+                     {"children":[],"id":53,"name":"Period 3 Grammar"},
+                 ],
+                 "id":50,"name":"Unit 5 First aid"}
+            ],
+            "id":1,"name":"高中英语二年级"
+    }
+    

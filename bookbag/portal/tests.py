@@ -96,89 +96,111 @@ class MyTestRunner(DjangoTestSuiteRunner):
     #     super(MyTestRunner, self).teardown_databases(old_config, **kwargs)
 
 
-class MyTest(TestCase):
+# class MyTest(TestCase):
+#     def setUp(self):
+#         prepare_base()
+#         prepare_student()
+#         prepare_teacher()
+#         self.student = User.objects.get(username='student1')
+#         self.teacher = User.objects.get(username='teacher1')
+#         self.stu_client = Client()
+#         self.stu_client.post('/login/', {
+#             'username': 'student1',
+#             'password': 'student123'
+#         })
+#         self.t_client = Client()
+#         self.t_client.post('/login/', {
+#             'username': 'teacher1',
+#             'password': 'teacher123'
+#         })
+
+#     def tearDown(self):
+#         self.stu_client.get('/logout/')
+#         self.t_client.get('/logout/')
+
+#     def prepare_vote(self):
+#         from mongoengine import connection
+#         connection.connect(MyTestRunner.mongodb_name)
+#         Vote.objects.create(
+#             title='test',
+#             kind='multiple',
+#             min_choice=1,
+#             max_choice=4,
+#             start_time=datetime.now(),
+#             started=True,
+#             owner=EmbeddedOwner(id='1_1', name=u'语文'),
+#             creator=EmbeddedUser(id=str(self.teacher.id),
+#                                  name=self.teacher.username),
+#             options=[Option(content=str(i+1)) for i in xrange(4)]
+#         )
+
+#     def test_vote(self):
+#         self.prepare_vote()
+#         self.vote = None
+#         self._test_controller()
+#         self._test_vote_list()
+#         self._test_vote_vote()
+
+#     def _test_controller(self):
+#         print '======== test controller start ========'
+#         res = self.stu_client.get('/course/controller/list/')
+#         print json.loads(res.content)
+#         res = self.t_client.get('/course/controller/list/')
+#         print json.loads(res.content)
+#         print '======== test controller end ========'
+
+#     def _test_vote_list(self):
+#         print '======== test vote list start ========'
+#         res = self.stu_client.get('/vote/list/1_1/')
+#         votes = json.loads(res.content)
+#         if votes:
+#             vote = votes[random.randint(0, len(votes)-1)]
+#             self.vote = dict2namedtuple('vote', vote)
+#         res = self.t_client.get('/vote/list/1_1/')
+#         votes = json.loads(res.content)
+#         print '======== test vote list end ========'
+
+#     def _test_vote_vote(self):
+#         print '======== test vote start ========'
+#         if self.vote:
+#             choices = range(len(self.vote.options))
+#             n = random.randint(self.vote.min_choice, self.vote.max_choice)
+#             i = random.randint(0, len(choices) - 1)
+#             choices *= 2
+#             selections = sorted([choices[x] for x in xrange(i, i+n)])
+#             data = {
+#                 'vote_id': self.vote.vote_id,
+#                 'user_id': self.student.id,
+#                 'user_name': self.student.username,
+#                 'selections': selections
+#             }
+#             print 'voting %s...' % self.vote.vote_id
+#             print 'destination is %s' % self.vote.destination
+#             stomp = get_stomp(dict2namedtuple('mq', self.vote.message_queue))
+#             stomp.send(self.vote.destination, json.dumps(data))
+#             print 'voted'
+#         else:
+#             print 'no active vote...'
+#         print '======== test vote end ========'
+
+
+class SimpleTest(TestCase):
     def setUp(self):
         prepare_base()
         prepare_student()
         prepare_teacher()
-        self.student = User.objects.get(username='student1')
-        self.teacher = User.objects.get(username='teacher1')
-        self.stu_client = Client()
-        self.stu_client.post('/login/', {
-            'username': 'student1',
-            'password': 'student123'
-        })
-        self.t_client = Client()
-        self.t_client.post('/login/', {
-            'username': 'teacher1',
-            'password': 'teacher123'
-        })
+        self.client = Client()
 
-    def tearDown(self):
-        self.stu_client.get('/logout/')
-        self.t_client.get('/logout/')
-
-    def prepare_vote(self):
-        from mongoengine import connection
-        connection.connect(MyTestRunner.mongodb_name)
-        Vote.objects.create(
-            title='test',
-            kind='multiple',
-            min_choice=1,
-            max_choice=4,
-            start_time=datetime.now(),
-            started=True,
-            owner=EmbeddedOwner(id='1_1', name=u'语文'),
-            creator=EmbeddedUser(id=str(self.teacher.id),
-                                 name=self.teacher.username),
-            options=[Option(content=str(i+1)) for i in xrange(4)]
-        )
-
-    def test_vote(self):
-        self.prepare_vote()
-        self.vote = None
-        self._test_controller()
-        self._test_vote_list()
-        self._test_vote_vote()
-
-    def _test_controller(self):
-        print '======== test controller start ========'
-        res = self.stu_client.get('/course/controller/list/')
-        print json.loads(res.content)
-        res = self.t_client.get('/course/controller/list/')
-        print json.loads(res.content)
-        print '======== test controller end ========'
-
-    def _test_vote_list(self):
-        print '======== test vote list start ========'
-        res = self.stu_client.get('/vote/list/1_1/')
-        votes = json.loads(res.content)
-        if votes:
-            vote = votes[random.randint(0, len(votes)-1)]
-            self.vote = dict2namedtuple('vote', vote)
-        res = self.t_client.get('/vote/list/1_1/')
-        votes = json.loads(res.content)
-        print '======== test vote list end ========'
-
-    def _test_vote_vote(self):
-        print '======== test vote start ========'
-        if self.vote:
-            choices = range(len(self.vote.options))
-            n = random.randint(self.vote.min_choice, self.vote.max_choice)
-            i = random.randint(0, len(choices) - 1)
-            choices *= 2
-            selections = sorted([choices[x] for x in xrange(i, i+n)])
-            data = {
-                'vote_id': self.vote.vote_id,
-                'user_id': self.student.id,
-                'user_name': self.student.username,
-                'selections': selections
-            }
-            print 'voting %s...' % self.vote.vote_id
-            print 'destination is %s' % self.vote.destination
-            stomp = get_stomp(dict2namedtuple('mq', self.vote.message_queue))
-            stomp.send(self.vote.destination, json.dumps(data))
-            print 'voted'
-        else:
-            print 'no active vote...'
-        print '======== test vote end ========'
+    def login(self, username, password, device='abc'):
+        r = self.client.get('/zh-Han/%s/%s/%s/?mac=1' % (device, username, password))
+        self.assertEqual(r.status_code, 200)
+        
+    def test_course_tree(self):
+        self.login('student1', 'student123')
+        r = self.client.get('/course/1/1/tree/')
+        self.assertEquals(r.status_code, 200)
+        r = json.loads(r.content)
+        self.assertEquals(r['result'], 'ok')
+        self.assertNotEqual(r['data'], None)
+        print r['data']
+        

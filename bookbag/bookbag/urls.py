@@ -46,6 +46,9 @@ urlpatterns = patterns(
     (r'^school/code/(\w+)/$', v.school_code),
     (r'^school/code/', v.school_code),
 
+    # course tree
+    (r'^course/(\w+)/(\w+)/tree/$', v.course_tree),
+    
     # vote
     (r'^vote/list/(\w+)/$', vv.vote_list),
     (r'^course/controller/list/', vv.get_course_controller),
