@@ -71,7 +71,7 @@ def result_list(request, courseware_id, class_id):
     resultdict = dict([((r.test_id, r.user_id), r) for r in results])
     data = OrderedDict()
     for u in users:
-        result = data.setdefault(u.username, {})
+        result = data.setdefault(u.username, OrderedDict())
         for t in tests:
             section = result.setdefault(t.section, [])
             try:
