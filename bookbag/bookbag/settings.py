@@ -107,7 +107,7 @@ INSTALLED_APPS = (
     'interface',
     'sync',
     'testing',
-    #'tastypie',
+    'tastypie',
 )
 
 # A sample logging configuration. The only tangible logging

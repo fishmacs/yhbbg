@@ -41,9 +41,12 @@ def ask_search(request, grade, class_id=None):
 
 @csrf_exempt
 def api(request):
-    auth_succ, username = _authenticate(request)
-    if not auth_succ:
-        return HttpResponse(status=401)
+    if request.user.is_authenticated():
+        username = request.user.username
+    else:
+        auth_succ, username = _authenticate(request)
+        if not auth_succ:
+            return HttpResponse(status=401)
     
     def format_header_name(name):
         return "-".join([ x[0].upper()+x[1:] for x in name[5:].lower().split('_') ])
