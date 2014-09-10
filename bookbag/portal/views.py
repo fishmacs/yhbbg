@@ -42,11 +42,11 @@ def _response_set_lang(lang, request, response):
 def _auth(request, device_id, username, password):
     status = 200
     redirect = True
-    if request.user.is_anonymous() or request.user.username != username:
-        logout(request)
-        need_login = True
-    else:
-        need_login = False
+    #if request.user.is_anonymous() or request.user.username != username:
+    logout(request)
+    need_login = True
+    # else:
+    #     need_login = False
     user = authenticate(username=username, password=password)
     if user:
         profile = user.get_profile()
