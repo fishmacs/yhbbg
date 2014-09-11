@@ -61,6 +61,7 @@ def put_result(request):
 @json_wrapper
 def result_list(request, courseware_id, class_id):
     tests = Test.objects.filter(courseware=courseware_id)
+    tests = [t for t in tests[:20]]
     results = TestResult.objects.select_related('test', 'user').filter(test__in=tests)
     if class_id == 'personal':
         users = [request.user]
