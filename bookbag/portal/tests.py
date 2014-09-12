@@ -20,6 +20,7 @@ from django.contrib.auth.models import User
 
 from common import models, global_def
 from common.mongo_models import Vote, EmbeddedUser, EmbeddedOwner, Option
+import coursetree
 
 
 def dict2namedtuple(name, dict):
@@ -38,13 +39,14 @@ def prepare_base():
     region = models.Region.objects.create(name=u'上海', code='abcd')
     school = models.School.objects.create(
         name='育才小学', code='abcd', type=1, region=region, region_name=u'上海')
-    models.SchoolClass.objects.create(
+    clss = models.SchoolClass.objects.create(
         name=u'一班', year=2013, start_date=date(2013, 9, 1),
         end_date=date(2019, 7, 1), school=school)
-    models.Course.objects.create(cid='001', course_name=u'语文')
-    models.Course.objects.create(cid='002', course_name=u'数学')
-    models.Course.objects.create(cid='003', course_name=u'英语')
-
+    c1 = models.Course.objects.create(cid='001', course_name=u'语文')
+    c2 = models.Course.objects.create(cid='002', course_name=u'数学')
+    c3 = models.Course.objects.create(cid='003', course_name=u'英语')
+    return clss, [c1, c2, c3]
+    
 
 def prepare_teacher():
     user = User.objects.create(username='teacher1')
@@ -186,7 +188,7 @@ class MyTestRunner(DjangoTestSuiteRunner):
 
 class SimpleTest(TestCase):
     def setUp(self):
-        prepare_base()
+        self.clss, self.courses = prepare_base()
         prepare_student()
         prepare_teacher()
         self.client = Client()
@@ -196,11 +198,22 @@ class SimpleTest(TestCase):
         self.assertEqual(r.status_code, 200)
         
     def test_course_tree(self):
+        self.load_course_tree()
         self.login('student1', 'student123')
-        r = self.client.get('/course/1/1/tree/')
+        r = self.client.get('/course/%d/%d/tree/' % (self.courses[0].id, self.clss.id))
         self.assertEquals(r.status_code, 200)
         r = json.loads(r.content)
         self.assertEquals(r['result'], 'ok')
-        self.assertNotEqual(r['data'], None)
-        print r['data']
-        
+        tree = r['data']
+        self.assertNotEqual(tree, None)
+        print json.dumps(tree, indent=2, ensure_ascii=False)
+
+    def load_course_tree(self):
+        version = models.BookProvider.objects.create(name='人教')
+        volume = models.BookVolume.objects.create(version=version, name='二年级语文上册', course=self.courses[0])
+        volume.classes = [self.clss]
+        coursetree.load('portal/data/coursetree1.xls', u'人教', u'二年级语文上册', u'二年级语文上册')
+        # qs = models.CourseTree.objects.all()
+        # for n in qs:
+        #     print n.id, n.volume_id, n.parent_id, n.name, n.level
+            

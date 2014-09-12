@@ -241,6 +241,27 @@ class BookProvider(models.Model):
         db_table = 'book_provider'
  
 
+class BookVolume(models.Model):
+    version = models.ForeignKey(BookProvider)
+    name = models.CharField(max_length=16)
+    name_en = models.CharField(max_length=16, default='')
+    course = models.ForeignKey(Course)
+    classes = models.ManyToManyField(SchoolClass)
+    
+    class Meta:
+        db_table = 'book_volume'
+        
+
+class CourseTree(models.Model):
+    volume = models.ForeignKey(BookVolume)
+    parent = models.ForeignKey('self', null=True)
+    name = models.CharField(max_length=80, default='')
+    level = models.SmallIntegerField(default=0)
+
+    class Meta:
+        db_table = 'course_tree'
+
+    
 class CoursewareCategory(models.Model):
     name_ch = models.CharField(max_length=16)
     name_en = models.CharField(max_length=16)
