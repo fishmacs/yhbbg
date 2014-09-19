@@ -24,11 +24,11 @@ def json_wrapper(_func):
             }
             return HttpResponse(util.jsondumps(data))
         except BookbagError as e:
-            return HttpResponse(util.fail(e.message))
-        except Exception as e:
-            import traceback
-            traceback.print_exc()
-            return HttpResponse(util.error(e.message))
+            return HttpResponse(util.fail(str(e)))
+        # except Exception as e:
+        #     import traceback
+        #     traceback.print_exc()
+        #     return HttpResponse(util.error(e.message))
     return _wrapper
 
              
