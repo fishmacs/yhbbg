@@ -115,11 +115,11 @@ class SyncDaemon(service.Service):
         dead_ids = []
         now = timezone.now()
         for id, t in self.sync_dict.iteritems():
-            logging.info('test time')
+            #logging.info('test time')
             if now - t > timedelta(seconds=self.SYNC_TIMEOUT):
                 self.unsubscribe('sync__' + id)
                 dead_ids.append(id)
-            logging.info('test time ok')
+            #logging.info('test time ok')
         for id in dead_ids:
             logging.info('remove dead sync %s', id)
             del self.sync_dict[id]

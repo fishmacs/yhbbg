@@ -54,12 +54,6 @@ def sync_get(request):
 @json_wrapper
 def sync_start(request, class_id, course_id):
     id = uuid.uuid1().get_hex()
-    models.LessonSync.objects.create(
-        uuid=id,
-        course_id=course_id,
-        myclass_id=class_id,
-        creator=request.user
-    )
     destination = '/topic/course__{0}_{1}'.format(class_id, course_id)
     data = {'command': 'start_sync',
             'sync_id': id,
@@ -68,6 +62,12 @@ def sync_start(request, class_id, course_id):
             'message_queue': settings.MESSAGE_QUEUE}
     msgq.send(msgq.DAEMON_CHANNEL, data)
     #msgq.subscribe_sync(id)
+    models.LessonSync.objects.create(
+        uuid=id,
+        course_id=course_id,
+        myclass_id=class_id,
+        creator=request.user
+    )
     return data
 
     
@@ -75,8 +75,6 @@ def sync_start(request, class_id, course_id):
 @json_wrapper
 def sync_end(request, id):
     sync = models.LessonSync.objects.get(uuid=id)
-    sync.finished = True
-    sync.save()
     #msgq.unsubscribe_sync(id)
     destination = '/topic/course__{0}_{1}'.format(sync.myclass_id, sync.course_id)
     data = {'command': 'end_sync',
@@ -85,3 +83,5 @@ def sync_end(request, id):
             'destination': '/dsub/sync__{0}'.format(id),
             'message_queue': settings.MESSAGE_QUEUE}
     msgq.send(msgq.DAEMON_CHANNEL, data)
+    sync.finished = True
+    sync.save()
