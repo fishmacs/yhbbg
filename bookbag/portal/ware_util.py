@@ -69,14 +69,14 @@ def set_courseware_undownloaded(user):
 
 
 def delete_delivered(user):
-    for course in models.UserCourseware.objects.filter(user__exact=user):
+    for c in models.UserCourseware.objects.filter(user__exact=user):
         try:
-            if course.url:
-                os.remove(course.url)  # .encode('utf8'))
+            if c.url:
+                os.remove(c.url)  # .encode('utf8'))
         except OSError:
             pass
         finally:
-            course.delete()
+            c.delete()
 
 
 def convert_finish(courseware_id, errmsg):
