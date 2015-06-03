@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 import util
 import db_util
+import voteq
 from decorator import authenticated_required
 from common.mongo_models import Vote, UserLog, EmbeddedUser
 
@@ -53,6 +54,7 @@ def _extract_vote(vote, user_id):
         'type': vote.kind,
         'end_time': vote.end_time.strftime('%Y-%m-%d %H:%M:%S')
         if vote.end_time else '',
+        'started': vote.started,
         'finished': vote.finished,
         'max_choice': vote.max_choice,
         'min_choice': vote.min_choice,
@@ -66,11 +68,39 @@ def _extract_vote(vote, user_id):
 @authenticated_required
 def vote_list(request, course_id):
     votes = Vote.objects.filter(owner__id=course_id,
-                                started=True, deleted=False).exclude(
+                                deleted=False).exclude(
         'owner', 'creator', 'modifier').order_by(
         'started', 'finished', '-start_time')
     ret = [_extract_vote(v, str(request.user.id)) for v in votes]
     return HttpResponse(json.dumps(ret, ensure_ascii=False))
+
+
+@authenticated_required
+def vote_start(request, vote_id):
+    vote = Vote.objects.get(pk=vote_id)
+    vote.started = True
+    vote.start_time = datetime.now()
+    vote.save()
+    voteq.send({'command': 'start_vote',
+                'vote_id': str(vote.id),
+                'title': vote.title,
+                'owner': '%s__%s' % (vote.owner.kind, vote.owner.id),
+                'type': vote.kind,
+                #'voter_count': vote.voter_count,
+                'options': [{'content': o.content} for o in vote.options]})
+    return HttpResponse(json.dumps({'result': 'ok'}))
+
+
+@authenticated_required
+def vote_end(request, vote_id):
+    vote = Vote.objects.get(pk=vote_id)
+    vote.finished = True
+    vote.end_time = datetime.now()
+    vote.save()
+    voteq.send({'command': 'end_vote',
+                'vote_id': str(vote.id),
+                'owner': '%s__%s' % (vote.owner.kind, vote.owner.id)})
+    return HttpResponse(json.dumps({'result': 'ok'}))
 
 
 def _dict_of_option(o, selected=False):

@@ -26,9 +26,9 @@ DATABASES = {
     }
 }
 
-# from mongoengine import connection
+from mongoengine import connection
 
-# connection.connect('bookbag')
+connection.connect('bookbag')
 
 # CACHES = {
 #     'default': {
@@ -67,4 +67,5 @@ MESSAGE_QUEUE = {
     'broker': 'mybroker',
     'username': 'user1',
     'password': 'test1',
+    'vote_queue': '/queue/vote'
 }

@@ -53,7 +53,9 @@ urlpatterns = patterns(
     (r'^vote/list/(\w+)/$', vv.vote_list),
     (r'^course/controller/list/', vv.get_course_controller),
     (r'^vote/detail/(\w+)/$', vv.vote_detail),
-
+    (r'^vote/start/(\w+)/$', vv.vote_start),
+    (r'^vote/end/(\w+)/$', vv.vote_end),
+    
     (r'^bigdata/log/upload/$', vv.upload_log),
 
     # sync

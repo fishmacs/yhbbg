@@ -23,9 +23,9 @@ DATABASES = {
     }
 }
 
-# from mongoengine import connection
+from mongoengine import connection
 
-# connection.connect('bookbag')
+connection.connect('bookbag')
 
 # CACHES = {
 #     'default': {
