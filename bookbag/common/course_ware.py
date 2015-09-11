@@ -26,7 +26,8 @@ def users_can_see_courseware(courseware):
 
     
 def create_courseware(course_id, grade, user, path, args):
-    if not args['image']:
+    image = args['image']
+    if not image:
         image = Courseware._meta.get_field('image').default  # settings.DEFAULT_COURSEWARE_IMAGE.replace('/media/', '')
     courseware = Courseware.objects.create(
         name=args['title'],
@@ -116,7 +117,7 @@ def undeliver_courseware(courseware):
 
     
 def deliver_user_courseware(user, courseware):
-    print user.user_id, user.device_id
+    #print user.user_id, user.device_id
     if hasattr(user, 'device_id'):
         # user is profile
         device_id = user.device_id
