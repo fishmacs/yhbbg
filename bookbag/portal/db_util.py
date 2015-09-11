@@ -104,7 +104,7 @@ def get_student_coursewares(user, session):
     # tids = [x.teacher_id for x in tcc_list]
     # return models.Courseware.objects.select_related('course','book_provider','teacher','category').filter(Q(class_type__isnull=True)|Q(class_type=class_type), teacher__in=tids, grade=grade, state__gte=common_def.COURSEWARE_STATE_FINISHED).order_by('course')
     #===========================================================================
-    return models.Courseware.objects.select_related('course','book_provider','teacher','category').filter(grade=grade, classes=profile.myclass_id, state__gte=common_def.COURSEWARE_STATE_CONVERTED).order_by('course', '-modified_time')
+    return models.Courseware.objects.select_related('course','book_provider','teacher','category').filter(grade=grade, classes=profile.myclass_id, state__gte=common_def.COURSEWARE_STATE_FINISHED).order_by('course', '-modified_time')
 
 
 def get_teacher_coursewares(user, clss):

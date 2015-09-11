@@ -341,7 +341,10 @@ class Courseware(models.Model):
                % (settings.BASE_DOWNLOAD_URL, self.id, urlquote(self.password.encode('utf8')))
 
     def get_download_url(self):
-        return settings.BASE_DOWNLOAD_URL + '?'
+        if self.path.startswith('http://'):
+            return self.path
+        else:
+            return settings.BASE_DOWNLOAD_URL + '?'
 
     def get_image_url(self):
         try:
