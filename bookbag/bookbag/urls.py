@@ -19,7 +19,7 @@ import sync.views as sc
 urlpatterns = patterns(
     '',
     (r'^$', v.course_page),
-    (r'^(en|zh-\w+)/(\w+)/([^/]+)/([^/]+)/$', v.start_page),
+    (r'^(en|zh-\w+(?:-\w+)*)/(\w+)/([^/]+)/([^/]+)/$', v.start_page),
     (r'^data/all/$', v.all_data0),
     (r'^data/all/(\w+)/$', v.all_data),
     #(r'^data/all/(\w+)/([^/]+)/([^/]+)/$', v.all_data),
