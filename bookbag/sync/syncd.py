@@ -21,7 +21,7 @@ from sync import models
 
 class SyncDaemon(service.Service):
     CHECK_SYNC_INTERVAL = 5
-    SYNC_TIMEOUT = 15
+    SYNC_TIMEOUT = 60
     
     def __init__(self):
         qs = models.LessonSync.objects.filter(finished=False)
@@ -95,6 +95,7 @@ class SyncDaemon(service.Service):
         if id in self.sync_dict:
             data = json.loads(frame.body)
             reactor.callInThread(self.add_sync_action, id, data)
+            self.sync_dict[id] = timezone.now()
         else:
             logging.warn('unknown sync id: ' + id)
             
@@ -117,16 +118,16 @@ class SyncDaemon(service.Service):
         for id, t in self.sync_dict.iteritems():
             #logging.info('test time')
             if now - t > timedelta(seconds=self.SYNC_TIMEOUT):
-                self.unsubscribe('sync__' + id)
                 dead_ids.append(id)
             #logging.info('test time ok')
+        if dead_ids:
+            reactor.callInThread(self.finish_sync, dead_ids)
         for id in dead_ids:
             logging.info('remove dead sync %s', id)
             del self.sync_dict[id]
             logging.info('remove ok')
-        if dead_ids:
-            reactor.callInThread(self.finish_sync, dead_ids)
-            
+            self.unsubscribe('sync__' + id)
+                
     @defer.inlineCallbacks
     def start_sync(self, data):
         id = data['sync_id']

@@ -122,7 +122,7 @@ def delete_row(i, row, encoding, classes):
 def detect_encoding(f):
     d = UniversalDetector()
     line = f.readline()
-    while(line):
+    while line:
         d.feed(line)
         if d.done:
             break
